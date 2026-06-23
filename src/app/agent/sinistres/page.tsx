@@ -768,7 +768,7 @@ const chargerSinistres = async () => {
                   <div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
                     {sinistre.statut === 'en_attente' && <button onClick={() => handleQuickAction(sinistre.id, 'prendre_en_charge')} className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">Prendre en charge</button>}
                     {sinistre.statut === 'en_cours' && !hasExpert && <Link href={`/agent/sinistres/${sinistre.id}/designer-expert`} className="px-3 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700">Désigner expert</Link>}
-                    <Link href={`/sinistres/${sinistre.id}`} className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-gray-200"><FaEye className="mr-1 h-3 w-3 inline" />Détails</Link>
+                    <Link href={`/agent/sinistres/${sinistre.id}`} className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-gray-200"><FaEye className="mr-1 h-3 w-3 inline" />Détails</Link>
                   </div>
                 </div>
                 {isExpanded && (
@@ -802,7 +802,7 @@ const chargerSinistres = async () => {
                           {!sinistre.indemnisation_payee && sinistre.statut === 'expertise' && expertiseTerminee && (
                             <Link href={`/admin/indemnisations`} className="block w-full text-center px-3 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700"><FaMoneyBillWave className="inline mr-1 h-3 w-3" />Indemnisation</Link>
                           )}
-                          <Link href={`/sinistres/${sinistre.id}`} className="block w-full text-center px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-100"><FaEye className="inline mr-1 h-3 w-3" />Voir dossier complet</Link>
+                          <Link href={`/agent/sinistres/${sinistre.id}`} className="block w-full text-center px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-100"><FaEye className="inline mr-1 h-3 w-3" />Voir dossier complet</Link>
                         </div>
                       </div>
                     </div>

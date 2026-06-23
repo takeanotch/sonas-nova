@@ -1219,6 +1219,8 @@ export default function DeclarationSinistrePage() {
     type_couvert: typeCouvert,
   });
 }, [formData.souscription_id, formData.type_sinistre, souscriptions]);
+
+
   const handleSelectAssure = (assure: User) => {
     addLog(`Assuré sélectionné: ${assure.nom} (ID: ${assure.id})`);
     setSelectedAssure(assure);
