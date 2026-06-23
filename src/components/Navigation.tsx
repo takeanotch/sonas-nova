@@ -14,7 +14,7 @@ const menuConfig = {
   admin: [
     { href: '/admin/dashboard', label: 'Dashboard', icon: FaHome, tooltip: 'Tableau de bord' },
     { href: '/admin/utilisateurs', label: 'Utilisateurs', icon: FaUsers, tooltip: 'Gérer les utilisateurs' },
-    { href: '/admin/souscriptions', label: 'Sinistres', icon: ClipboardList, tooltip: 'Gérer les sinistres' },
+    { href: '/admin/souscriptions', label: 'Souscriptions', icon: ClipboardList, tooltip: 'Gérer les sinistres' },
   ],
   agent: [
     { href: '/agent/dashboard', label: 'Dashboard', icon: FaHome, tooltip: 'Tableau de bord' },

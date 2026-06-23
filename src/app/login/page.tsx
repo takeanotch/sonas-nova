@@ -362,7 +362,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
                     id="remember-me"
@@ -379,7 +379,7 @@ export default function LoginPage() {
                     Mot de passe oublié ?
                   </Link>
                 </div>
-              </div>
+              </div> */}
 
               <button
                 type="submit"
@@ -403,7 +403,7 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <div className="mt-6 text-center">
+            {/* <div className="mt-6 text-center">
               <Link 
                 href="/register" 
                 className="inline-flex items-center text-sm text-blue-600 hover:text-blue-500 font-medium"
@@ -420,7 +420,7 @@ export default function LoginPage() {
                   Contactez le support
                 </a>
               </p>
-            </div>
+            </div> */}
           </div>
 
           {/* Footer */}
