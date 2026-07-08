@@ -1,5 +1,6 @@
 
-// // app/sinistres/[id]/page.tsx
+
+// // app/agent/sinistres/[id]/page.tsx
 // 'use client';
 
 // import React, { useState, useEffect, use } from 'react';
@@ -11,10 +12,11 @@
 //   FaCheckCircle, FaTimesCircle, FaClock, FaSpinner,
 //   FaUser, FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave,
 //   FaHistory, FaTimes, FaExclamationTriangle, FaClipboardList,
-//   FaUserCheck, FaUserTie,FaInfo, FaSearch, FaPaperPlane,
-//   FaComments, FaPhone, FaEnvelope, FaBuilding, FaChevronRight,
-//   FaClipboardCheck, FaFileContract, FaHandshake,
-//   FaCheck, FaBan, FaPlus, FaEye, FaTrash
+//   FaUserCheck, FaUserTie, FaInfo, FaPaperPlane,
+//   FaComments, FaPhone, FaFileContract,
+//   FaClipboardCheck, FaCheck, FaBan, FaPlus, FaTrash,
+//   FaHandHoldingUsd, FaCar, FaIdCard, FaTools, FaUserInjured,
+//   FaChevronDown, FaChevronUp, FaMinus
 // } from 'react-icons/fa';
 // import Link from 'next/link';
 // import { format } from 'date-fns';
@@ -34,7 +36,6 @@
 //   nom: string;
 //   email: string;
 //   telephone?: string;
-//   specialite?: string;
 // };
 
 // type Expertise = {
@@ -62,12 +63,10 @@
 
 // type Communication = {
 //   id: string;
-//   type: 'message' | 'notification' | 'reclamation'; // ✅ Correction: retiré "note"
+//   type: 'message' | 'notification' | 'reclamation';
 //   contenu: string;
 //   expediteur_nom: string;
 //   expediteur_role: string;
-//   priorite?: 'normal' | 'urgent' | 'critique';
-//   statut_reclamation?: 'ouverte' | 'en_cours' | 'resolue' | 'fermee';
 //   created_at: string;
 // };
 
@@ -90,64 +89,92 @@
 //   };
 // };
 
+// type Indemnisation = {
+//   id: string;
+//   montant_indemnisation: number;
+//   mode_paiement: string;
+//   statut: string;
+//   date_validation: string | null;
+//   date_paiement: string | null;
+//   reference_paiement: string | null;
+//   commentaire: string | null;
+// };
+
+// type SonasDeclaration = {
+//   id: number;
+//   agence: string;
+//   police: string;
+//   valable_du: string;
+//   valable_au: string;
+//   claim_no: string;
+//   garantie: string;
+//   telephone: string;
+//   date_heure_accident: string;
+//   lieu_accident: string;
+//   preneur_nom: string;
+//   preneur_prenoms: string;
+//   preneur_adresse: string;
+//   conducteur_nom_prenom: string;
+//   conducteur_age: number;
+//   conducteur_a_service: boolean;
+//   conducteur_titre_conduite: string;
+//   permis_no: string;
+//   permis_delivre_a: string;
+//   permis_date: string;
+//   vehicule_marque_type: string;
+//   vehicule_plaque: string;
+//   vehicule_chassis: string;
+//   vehicule_moteur: string;
+//   vehicule_puissance: string;
+//   vehicule_annee: number;
+//   vehicule_kilometrage: number;
+//   vehicule_valeur: number;
+//   garantie_rc: boolean;
+//   garantie_dm: boolean;
+//   garantie_inc: boolean;
+//   garantie_vol: boolean;
+//   description_accident: string;
+//   degats_description: string;
+//   degats_montant_evalue: number;
+//   vehicule_immobilise: boolean;
+//   lieu_garde_expertise: string;
+//   adversaire_nom: string;
+//   adversaire_post_nom: string;
+//   adversaire_prenom: string;
+//   adversaire_adresse: string;
+//   adversaire_vehicule: string;
+//   adversaire_plaque: string;
+//   adversaire_assurance: string;
+//   adversaire_telephone: string;
+//   degats_materiels_description: string;
+//   degats_materiels_evalues: number;
+//   blesses_ou_morts: boolean;
+//   victimes_infos: string;
+//   victimes_soins_lieu: string;
+//   hopital_nom_adresse: string;
+//   medecin_nom: string;
+//   medecin_telephone: string;
+//   tiers_transportes: string;
+//   temoins: string;
+//   pv_par: string;
+//   localite: string;
+//   gendarmerie: string;
+//   officier_gendarme: string;
+//   prime_payee: boolean;
+//   prime_date: string;
+//   fait_a: string;
+//   date_signature: string;
+// };
+
 // // ==================== CONSTANTES ====================
 
-// const STATUTS: Record<string, { 
-//   label: string; 
-//   icon: React.ComponentType<any>; 
-//   color: string;
-//   bgColor: string;
-//   progress: number;
-//   description: string;
-// }> = {
-//   en_attente: { 
-//     label: 'En attente', 
-//     icon: FaClock, 
-//     color: 'text-yellow-600',
-//     bgColor: 'bg-yellow-100',
-//     progress: 10,
-//     description: 'Dossier reçu, en attente de traitement'
-//   },
-//   en_cours: { 
-//     label: 'En cours', 
-//     icon: FaSpinner, 
-//     color: 'text-blue-600',
-//     bgColor: 'bg-blue-100',
-//     progress: 30,
-//     description: 'Dossier pris en charge par un agent'
-//   },
-//   expertise: { 
-//     label: 'En expertise', 
-//     icon: FaClipboardList, 
-//     color: 'text-purple-600',
-//     bgColor: 'bg-purple-100',
-//     progress: 50,
-//     description: 'Expert désigné, évaluation en cours'
-//   },
-//   en_indemnisation: { 
-//     label: 'En indemnisation', 
-//     icon: FaMoneyBillWave, 
-//     color: 'text-indigo-600',
-//     bgColor: 'bg-indigo-100',
-//     progress: 75,
-//     description: 'Indemnisation en cours de versement'
-//   },
-//   cloture: { 
-//     label: 'Clôturé', 
-//     icon: FaCheckCircle, 
-//     color: 'text-green-600',
-//     bgColor: 'bg-green-100',
-//     progress: 100,
-//     description: 'Dossier clôturé'
-//   },
-//   refuse: { 
-//     label: 'Refusé', 
-//     icon: FaTimesCircle, 
-//     color: 'text-red-600',
-//     bgColor: 'bg-red-100',
-//     progress: 0,
-//     description: 'Dossier refusé'
-//   },
+// const STATUTS: Record<string, { label: string; icon: React.ComponentType<any>; color: string; bgColor: string; progress: number; description: string; }> = {
+//   en_attente: { label: 'En attente', icon: FaClock, color: 'text-yellow-600', bgColor: 'bg-yellow-100', progress: 10, description: 'Dossier reçu, en attente de traitement' },
+//   en_cours: { label: 'En cours', icon: FaSpinner, color: 'text-blue-600', bgColor: 'bg-blue-100', progress: 30, description: 'Dossier pris en charge par un agent' },
+//   expertise: { label: 'En expertise', icon: FaClipboardList, color: 'text-purple-600', bgColor: 'bg-purple-100', progress: 50, description: 'Expert désigné, évaluation en cours' },
+//   en_indemnisation: { label: 'En indemnisation', icon: FaMoneyBillWave, color: 'text-indigo-600', bgColor: 'bg-indigo-100', progress: 75, description: 'Indemnisation en cours de versement' },
+//   cloture: { label: 'Clôturé', icon: FaCheckCircle, color: 'text-green-600', bgColor: 'bg-green-100', progress: 100, description: 'Dossier clôturé' },
+//   refuse: { label: 'Refusé', icon: FaTimesCircle, color: 'text-red-600', bgColor: 'bg-red-100', progress: 0, description: 'Dossier refusé' },
 // };
 
 // const TYPES_SINISTRE: Record<string, { label: string; icon: string }> = {
@@ -161,23 +188,29 @@
 //   autre: { label: 'Autre', icon: '📋' },
 // };
 
+// const INDEMNISATION_STATUTS: Record<string, { label: string; color: string; bgColor: string }> = {
+//   en_attente: { label: 'En attente', color: 'text-yellow-700', bgColor: 'bg-yellow-100' },
+//   validee: { label: 'Validée', color: 'text-blue-700', bgColor: 'bg-blue-100' },
+//   payee: { label: 'Payée', color: 'text-green-700', bgColor: 'bg-green-100' },
+//   annulee: { label: 'Annulée', color: 'text-red-700', bgColor: 'bg-red-100' },
+// };
+
+// const MODES_PAIEMENT: Record<string, string> = {
+//   virement: 'Virement bancaire',
+//   cheque: 'Chèque',
+//   mobile_money: 'Mobile Money',
+//   especes: 'Espèces',
+// };
+
 // // ==================== COMPOSANTS ====================
 
 // function AssureAvatar({ assure, size = 'md' }: { assure: Assure; size?: 'sm' | 'md' | 'lg' }) {
-//   const sizeClasses = { sm: 'h-8 w-8 text-xs', md: 'h-12 w-12 text-sm', lg: 'h-16 w-16 text-lg' };
+//   const sizeClasses = { sm: 'h-8 w-8', md: 'h-12 w-12', lg: 'h-16 w-16' };
 //   const getInitials = (nom: string) => nom?.split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2) || '??';
-  
 //   return (
 //     <div className={`${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0`}>
 //       {assure.photo_profil ? (
-//         <img src={assure.photo_profil} alt={assure.nom} className="w-full h-full object-cover"
-//           onError={(e) => {
-//             const target = e.target as HTMLImageElement;
-//             target.style.display = 'none';
-//             target.parentElement!.classList.add('bg-orange-600', 'flex', 'items-center', 'justify-center');
-//             target.parentElement!.innerHTML = `<span class="text-white font-medium">${getInitials(assure.nom || '')}</span>`;
-//           }}
-//         />
+//         <img src={assure.photo_profil} alt="" className="w-full h-full object-cover" />
 //       ) : (
 //         <div className="w-full h-full bg-orange-600 flex items-center justify-center">
 //           <span className="text-white font-medium">{getInitials(assure.nom || '')}</span>
@@ -195,9 +228,7 @@
 //         <div className="relative bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
 //           <div className="flex items-center justify-between mb-4">
 //             <h3 className="text-lg font-semibold">{title}</h3>
-//             <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-//               <FaTimes className="h-5 w-5" />
-//             </button>
+//             <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><FaTimes className="h-5 w-5" /></button>
 //           </div>
 //           {children}
 //         </div>
@@ -211,8 +242,7 @@
 //   const Icon = info.icon;
 //   return (
 //     <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${info.bgColor} ${info.color}`}>
-//       <Icon className="mr-1.5 h-4 w-4" />
-//       {info.label}
+//       <Icon className="mr-1.5 h-4 w-4" />{info.label}
 //     </span>
 //   );
 // }
@@ -225,25 +255,22 @@
 //     if (progress >= 30) return 'bg-blue-500';
 //     return 'bg-yellow-500';
 //   };
-
 //   return (
 //     <div className="w-full bg-gray-200 rounded-full h-3">
-//       <div 
-//         className={`h-3 rounded-full transition-all duration-500 ${getColor()}`}
-//         style={{ width: `${Math.max(progress, 2)}%` }}
-//       />
+//       <div className={`h-3 rounded-full transition-all duration-500 ${getColor()}`} style={{ width: `${Math.max(progress, 2)}%` }} />
 //     </div>
 //   );
 // }
 
-// function InfoItem({ label, value, icon: Icon, color }: { label: string; value: string; icon?: any; color?: string }) {
+// function CollapsibleSection({ title, icon, children, defaultOpen = false }: { title: string; icon?: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }) {
+//   const [isOpen, setIsOpen] = useState(defaultOpen);
 //   return (
-//     <div>
-//       <dt className="text-sm font-medium text-gray-500">{label}</dt>
-//       <dd className={`mt-1 text-sm ${color || 'text-gray-900'}`}>
-//         {Icon && <Icon className="inline mr-1 h-3 w-3 text-gray-400" />}
-//         {value}
-//       </dd>
+//     <div className="border rounded-lg overflow-hidden">
+//       <button type="button" onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors">
+//         <div className="flex items-center gap-2">{icon && <span className="text-blue-600">{icon}</span>}<h3 className="font-semibold text-sm text-gray-900">{title}</h3></div>
+//         {isOpen ? <FaChevronUp className="h-4 w-4 text-gray-500" /> : <FaChevronDown className="h-4 w-4 text-gray-500" />}
+//       </button>
+//       {isOpen && <div className="p-4 bg-white">{children}</div>}
 //     </div>
 //   );
 // }
@@ -262,260 +289,145 @@
 //   const [historique, setHistorique] = useState<any[]>([]);
 //   const [expertises, setExpertises] = useState<Expertise[]>([]);
 //   const [communications, setCommunications] = useState<Communication[]>([]);
+//   const [indemnisation, setIndemnisation] = useState<Indemnisation | null>(null);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState<string | null>(null);
 //   const [success, setSuccess] = useState<string | null>(null);
+//   const [sonasDeclaration, setSonasDeclaration] = useState<SonasDeclaration | null>(null);
+//   const [showAllSonasDetails, setShowAllSonasDetails] = useState(false);
 
-//   // Experts disponibles
 //   const [experts, setExperts] = useState<Expert[]>([]);
 //   const [showDesignateExpert, setShowDesignateExpert] = useState(false);
 //   const [selectedExpert, setSelectedExpert] = useState('');
 //   const [dateExpertise, setDateExpertise] = useState('');
 
-//   // Rapport expertise
-//   const [showRapportModal, setShowRapportModal] = useState(false);
-//   const [editingExpertise, setEditingExpertise] = useState<Expertise | null>(null);
-//   const [rapportForm, setRapportForm] = useState({
-//     rapport: '',
-//     conclusion: '',
-//     montant_evalue: 0,
-//   });
-//   const [rapportFiles, setRapportFiles] = useState<File[]>([]);
-
-//   // Communication
 //   const [newMessage, setNewMessage] = useState('');
 //   const [showStatusModal, setShowStatusModal] = useState(false);
 //   const [newStatus, setNewStatus] = useState('');
 //   const [statusComment, setStatusComment] = useState('');
 
+//   const [showIndemnisationModal, setShowIndemnisationModal] = useState(false);
+//   const [indemnisationForm, setIndemnisationForm] = useState({ montant_indemnisation: 0, mode_paiement: 'virement', commentaire: '' });
+//   const [saving, setSaving] = useState(false);
+
 //   useEffect(() => {
 //     if (user && id) {
 //       chargerTout();
-//       if (['admin', 'agent'].includes(user.role || '')) {
-//         chargerExperts();
-//       }
+//       if (['admin', 'agent'].includes(user.role || '')) chargerExperts();
 //     }
 //   }, [user, id]);
 
 //   const chargerTout = async () => {
-//     try {
-//       setLoading(true);
-//       await Promise.all([
-//         chargerSinistre(),
-//         chargerExpertises(),
-//         chargerCommunications(),
-//       ]);
-//     } finally {
-//       setLoading(false);
-//     }
+//     try { setLoading(true); await Promise.all([chargerSinistre(), chargerExpertises(), chargerCommunications(), chargerIndemnisation()]); }
+//     finally { setLoading(false); }
 //   };
 
 //   const chargerSinistre = async () => {
-//     const { data, error } = await supabase
-//       .from('sinistres')
-//       .select(`*, assure:users!sinistres_assure_id_fkey(nom, email, telephone, photo_profil)`)
-//       .eq('id', id)
-//       .single();
-    
-//     if (error) throw error;
+//     const { data } = await supabase.from('sinistres').select('*').eq('id', id).single();
 //     if (!data) throw new Error('Sinistre non trouvé');
 
-//     // Charger souscription
+//     const { data: assureData } = await supabase.from('users').select('nom, email, telephone, photo_profil').eq('id', data.assure_id).single();
 //     let souscription = null;
 //     if (data.souscription_id) {
-//       const { data: subData } = await supabase
+//       const { data: subData } = await supabase.from('souscriptions').select('police_numero').eq('id', data.souscription_id).single();
+//       souscription = subData;
+
+//       // Charger SONAS si automobile
+//       const { data: souscriptionData } = await supabase
 //         .from('souscriptions')
-//         .select('police_numero, produit:produits(nom)')
+//         .select('type_assurance:types_assurance!souscriptions_type_assurance_id_fkey(code)')
 //         .eq('id', data.souscription_id)
 //         .single();
-//       souscription = subData;
+      
+//       const typeAssuranceCode = (souscriptionData?.type_assurance as any)?.code;
+      
+//       if (typeAssuranceCode === 'automobile') {
+//         const { data: sonasData } = await supabase
+//           .from('sonas_declarations_accident')
+//           .select('*')
+//           .eq('sinistre_id', id)
+//           .single();
+        
+//         if (sonasData) setSonasDeclaration(sonasData as SonasDeclaration);
+//       }
 //     }
 
-//     setSinistre({ ...data, souscription });
+//     setSinistre({ ...data, assure: assureData || { nom: 'Inconnu', email: '' }, souscription });
 
-//     // Documents
-//     const { data: docs } = await supabase
-//       .from('sinistre_documents')
-//       .select('*')
-//       .eq('sinistre_id', id)
-//       .order('created_at', { ascending: false });
+//     const { data: docs } = await supabase.from('sinistre_documents').select('*').eq('sinistre_id', id).order('created_at', { ascending: false });
 //     setDocuments(docs || []);
 
-//     // Historique
-//     const { data: hist } = await supabase
-//       .from('sinistre_historique')
-//       .select('*, modifie_par:users(nom)')
-//       .eq('sinistre_id', id)
-//       .order('created_at', { ascending: false });
+//     const { data: hist } = await supabase.from('sinistre_historique').select('*').eq('sinistre_id', id).order('created_at', { ascending: false });
 //     setHistorique(hist || []);
 //   };
 
 //   const chargerExpertises = async () => {
-//     const { data, error } = await supabase
-//       .from('expertises')
-//       .select(`*, expert:users!expertises_expert_id_fkey(nom, email), documents:expertise_documents(*)`)
-//       .eq('sinistre_id', id)
-//       .order('created_at', { ascending: false });
-    
-//     if (!error && data) {
-//       setExpertises(data.map(e => ({
-//         ...e,
-//         expert_nom: e.expert?.nom || 'Inconnu',
-//         expert_email: e.expert?.email || '',
-//       })));
+//     const { data } = await supabase.from('expertises').select('*').eq('sinistre_id', id).order('created_at', { ascending: false });
+//     if (data && data.length > 0) {
+//       const expertIds = [...new Set(data.map(e => e.expert_id))];
+//       const { data: expertsData } = await supabase.from('users').select('id, nom, email').in('id', expertIds);
+//       const expertMap = new Map();
+//       if (expertsData) expertsData.forEach(e => expertMap.set(e.id, e));
+//       setExpertises(data.map(e => ({ ...e, expert_nom: expertMap.get(e.expert_id)?.nom || 'Inconnu', expert_email: expertMap.get(e.expert_id)?.email || '', documents: [] })));
 //     }
 //   };
 
 //   const chargerCommunications = async () => {
-//     const { data } = await supabase
-//       .from('sinistre_communications')
-//       .select(`*, expediteur:users(nom, role)`)
-//       .eq('sinistre_id', id)
-//       .order('created_at', { ascending: false })
-//       .limit(50);
-    
-//     setCommunications((data || []).map(c => ({
-//       ...c,
-//       expediteur_nom: c.expediteur?.nom || 'Système',
-//       expediteur_role: c.expediteur?.role || 'system',
-//     })));
+//     const { data } = await supabase.from('sinistre_communications').select('*').eq('sinistre_id', id).order('created_at', { ascending: false }).limit(50);
+//     if (data && data.length > 0) {
+//       const userIds = [...new Set(data.map(c => c.expediteur_id))];
+//       const { data: users } = await supabase.from('users').select('id, nom, role').in('id', userIds);
+//       const userMap = new Map();
+//       if (users) users.forEach(u => userMap.set(u.id, u));
+//       setCommunications(data.map(c => ({ ...c, expediteur_nom: userMap.get(c.expediteur_id)?.nom || 'Système', expediteur_role: userMap.get(c.expediteur_id)?.role || 'system' })));
+//     } else setCommunications([]);
 //   };
 
 //   const chargerExperts = async () => {
-//     const { data } = await supabase
-//       .from('users')
-//       .select('id, nom, email, telephone')
-//       .eq('role', 'expert')
-//       .order('nom');
+//     const { data } = await supabase.from('users').select('id, nom, email, telephone').eq('role', 'expert').order('nom');
 //     setExperts(data || []);
 //   };
 
-//   // ============ ACTIONS ============
-  
-//   const handleDesignateExpert = async () => {
-//     if (!selectedExpert || !dateExpertise) {
-//       setError('Veuillez sélectionner un expert et une date');
-//       return;
-//     }
-//     try {
-//       const { error } = await supabase.from('expertises').insert({
-//         sinistre_id: id,
-//         expert_id: selectedExpert,
-//         date_designation: new Date().toISOString(),
-//         date_expertise: dateExpertise,
-//         statut: 'planifiee',
-//       });
-//       if (error) throw error;
-
-//       // Mettre à jour le statut du sinistre si nécessaire
-//       if (sinistre?.statut === 'en_cours') {
-//         await supabase.from('sinistres')
-//           .update({ statut: 'expertise', updated_by: user?.id })
-//           .eq('id', id);
-//       }
-
-//       await ajouterHistorique('expertise', `Expert ${experts.find(e => e.id === selectedExpert)?.nom} désigné`);
-//       await ajouterCommunication('notification', `Expert désigné. Date d'expertise prévue : ${formatDate(dateExpertise)}`);
-      
-//       setSuccess('Expert désigné avec succès');
-//       setShowDesignateExpert(false);
-//       setSelectedExpert('');
-//       setDateExpertise('');
-//       await chargerTout();
-//       setTimeout(() => setSuccess(null), 3000);
-//     } catch (err: any) {
-//       setError(err.message);
+//   const chargerIndemnisation = async () => {
+//     const { data } = await supabase.from('indemnisations').select('*').eq('sinistre_id', id).single();
+//     if (data) {
+//       setIndemnisation(data);
+//       setIndemnisationForm({ montant_indemnisation: data.montant_indemnisation, mode_paiement: data.mode_paiement, commentaire: data.commentaire || '' });
 //     }
 //   };
 
-//   const handleSubmitRapport = async () => {
-//     if (!editingExpertise) return;
+//   const isIndemnisationPayee = indemnisation?.statut === 'payee';
+//   const statutEffectif = isIndemnisationPayee ? 'cloture' : (sinistre?.statut || 'en_attente');
+
+//   // ============ ACTIONS ============
+
+//   const handleDesignateExpert = async () => {
+//     if (!selectedExpert || !dateExpertise) { setError('Veuillez sélectionner un expert et une date'); return; }
 //     try {
-//       const { error } = await supabase.from('expertises').update({
-//         rapport: rapportForm.rapport,
-//         conclusion: rapportForm.conclusion,
-//         montant_evalue: rapportForm.montant_evalue,
-//         statut: 'terminee',
-//         date_expertise: new Date().toISOString(),
-//       }).eq('id', editingExpertise.id);
-//       if (error) throw error;
-
-//       // Upload documents expertise
-//       for (const file of rapportFiles) {
-//         const fileName = `expertises/${id}/${Date.now()}-${file.name}`;
-//         await supabase.storage.from('expertises').upload(fileName, file);
-//         const { data: { publicUrl } } = supabase.storage.from('expertises').getPublicUrl(fileName);
-//         await supabase.from('expertise_documents').insert({
-//           expertise_id: editingExpertise.id,
-//           nom_fichier: file.name,
-//           url_fichier: publicUrl,
-//           type_document: 'rapport',
-//           taille_fichier: file.size,
-//           type_mime: file.type,
-//         });
-//       }
-
-//       await ajouterHistorique('expertise_terminee', 'Rapport d\'expertise soumis');
-//       await ajouterCommunication('notification', `Rapport d'expertise déposé. Montant évalué : ${formatMontant(rapportForm.montant_evalue)}`);
-      
-//       setSuccess('Rapport d\'expertise soumis avec succès');
-//       setShowRapportModal(false);
-//       setRapportFiles([]);
-//       await chargerTout();
-//       setTimeout(() => setSuccess(null), 3000);
-//     } catch (err: any) {
-//       setError(err.message);
-//     }
+//       await supabase.from('expertises').insert({ sinistre_id: id, expert_id: selectedExpert, date_designation: new Date().toISOString(), date_expertise: dateExpertise, statut: 'planifiee' });
+//       if (sinistre?.statut === 'en_cours') await supabase.from('sinistres').update({ statut: 'expertise', updated_by: user?.id }).eq('id', id);
+//       await ajouterCommunication('notification', `Expert désigné. Date prévue : ${formatDate(dateExpertise)}`);
+//       setSuccess('Expert désigné'); setShowDesignateExpert(false); await chargerTout(); setTimeout(() => setSuccess(null), 3000);
+//     } catch (err: any) { setError(err.message); }
 //   };
 
 //   const handleSendMessage = async () => {
 //     if (!newMessage.trim()) return;
 //     try {
-//       const { error } = await supabase.from('sinistre_communications').insert({
-//         sinistre_id: id,
-//         type: 'message', // ✅ Utiliser 'message' au lieu de 'note'
-//         contenu: newMessage,
-//         expediteur_id: user?.id,
-//       });
-//       if (error) {
-//         console.error('Erreur envoi message:', error);
-//         throw error;
-//       }
-//       setNewMessage('');
-//       await chargerCommunications();
-//     } catch (err: any) {
-//       setError(err.message);
-//     }
+//       await supabase.from('sinistre_communications').insert({ sinistre_id: id, type: 'message', contenu: newMessage, expediteur_id: user?.id });
+//       setNewMessage(''); await chargerCommunications();
+//     } catch (err: any) { setError(err.message); }
 //   };
 
 //   const handleChangeStatus = async () => {
 //     if (!newStatus) return;
 //     try {
-//       const updateData: any = { 
-//         statut: newStatus, 
-//         updated_by: user?.id,
-//         updated_at: new Date().toISOString(),
-//       };
-
-//       if (newStatus === 'cloture') {
-//         updateData.date_cloture = new Date().toISOString();
-//       }
-
-//       const { error } = await supabase.from('sinistres').update(updateData).eq('id', id);
-//       if (error) throw error;
-
-//       await ajouterHistorique(sinistre?.statut || '', statusComment || `Statut changé en "${STATUTS[newStatus]?.label}"`);
-//       await ajouterCommunication('notification', `Statut mis à jour : ${STATUTS[newStatus]?.label}. ${statusComment}`);
-      
-//       setSuccess('Statut mis à jour avec succès');
-//       setShowStatusModal(false);
-//       setNewStatus('');
-//       setStatusComment('');
-//       await chargerSinistre();
-//       setTimeout(() => setSuccess(null), 3000);
-//     } catch (err: any) {
-//       setError(err.message);
-//     }
+//       const updateData: any = { statut: newStatus, updated_by: user?.id, updated_at: new Date().toISOString() };
+//       if (newStatus === 'cloture') updateData.date_cloture = new Date().toISOString();
+//       await supabase.from('sinistres').update(updateData).eq('id', id);
+//       await ajouterCommunication('notification', `Statut mis à jour : ${STATUTS[newStatus]?.label}`);
+//       setSuccess('Statut mis à jour'); setShowStatusModal(false); await chargerSinistre(); setTimeout(() => setSuccess(null), 3000);
+//     } catch (err: any) { setError(err.message); }
 //   };
 
 //   const handleUploadDocument = async (files: FileList) => {
@@ -523,675 +435,240 @@
 //       for (const file of Array.from(files)) {
 //         const fileName = `${id}/${Date.now()}-${file.name}`;
 //         await supabase.storage.from('sinistres').upload(fileName, file);
-//         const { data: { publicUrl } } = supabase.storage.from('sinistres').getPublicUrl(fileName);
-//         await supabase.from('sinistre_documents').insert({
-//           sinistre_id: id,
-//           nom_fichier: file.name,
-//           url_fichier: publicUrl,
-//           type_document: 'autre_document',
-//           taille_fichier: file.size,
-//           type_mime: file.type,
-//           uploaded_by: user?.id,
-//         });
+//         const { data } = supabase.storage.from('sinistres').getPublicUrl(fileName);
+//         await supabase.from('sinistre_documents').insert({ sinistre_id: id, nom_fichier: file.name, url_fichier: data.publicUrl, type_document: 'autre_document', taille_fichier: file.size, type_mime: file.type, uploaded_by: user?.id });
 //       }
-//       await chargerSinistre();
-//       setSuccess('Documents téléchargés avec succès');
-//       setTimeout(() => setSuccess(null), 3000);
-//     } catch (err: any) {
-//       setError(err.message);
-//     }
+//       await chargerSinistre(); setSuccess('Documents téléchargés'); setTimeout(() => setSuccess(null), 3000);
+//     } catch (err: any) { setError(err.message); }
 //   };
 
-//   // ============ HELPERS ============
-  
-//   const ajouterHistorique = async (ancienStatut: string, commentaire: string) => {
-//     await supabase.from('sinistre_historique').insert({
-//       sinistre_id: id,
-//       ancien_statut: ancienStatut,
-//       nouveau_statut: sinistre?.statut || ancienStatut,
-//       commentaire,
-//       modifie_par: user?.id,
-//     });
+//   const handleInitierIndemnisation = () => {
+//     const expertiseTerminee = expertises.find(e => e.statut === 'terminee');
+//     const montantBase = expertiseTerminee?.montant_evalue || sinistre?.montant_estime || 0;
+//     setIndemnisationForm({ montant_indemnisation: montantBase, mode_paiement: indemnisation?.mode_paiement || 'virement', commentaire: indemnisation?.commentaire || '' });
+//     setShowIndemnisationModal(true);
+//   };
+
+//   const handleSaveIndemnisation = async () => {
+//     setSaving(true);
+//     try {
+//       if (indemnisation?.id) {
+//         await supabase.from('indemnisations').update({ montant_indemnisation: indemnisationForm.montant_indemnisation, mode_paiement: indemnisationForm.mode_paiement, commentaire: indemnisationForm.commentaire, updated_at: new Date().toISOString() }).eq('id', indemnisation.id);
+//       } else {
+//         await supabase.from('indemnisations').insert({ sinistre_id: id, montant_indemnisation: indemnisationForm.montant_indemnisation, mode_paiement: indemnisationForm.mode_paiement, statut: 'en_attente', commentaire: indemnisationForm.commentaire, created_by: user?.id });
+//         if (sinistre?.statut === 'expertise') await supabase.from('sinistres').update({ statut: 'en_indemnisation', updated_by: user?.id }).eq('id', id);
+//       }
+//       await ajouterCommunication('notification', `Indemnisation ${indemnisation?.id ? 'mise à jour' : 'initiée'} : ${formatMontant(indemnisationForm.montant_indemnisation)}`);
+//       setSuccess('Indemnisation enregistrée'); setShowIndemnisationModal(false); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
+//     } catch (err: any) { setError(err.message); }
+//     finally { setSaving(false); }
+//   };
+
+//   const handleValidateIndemnisation = async () => {
+//     try {
+//       await supabase.from('indemnisations').update({ statut: 'validee', date_validation: new Date().toISOString() }).eq('id', indemnisation?.id);
+//       await ajouterCommunication('notification', `Indemnisation validée : ${formatMontant(indemnisation!.montant_indemnisation)}`);
+//       setSuccess('Indemnisation validée'); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
+//     } catch (err: any) { setError(err.message); }
+//   };
+
+//   const handlePayerIndemnisation = async () => {
+//     const reference = prompt('Référence de paiement (optionnel) :');
+//     try {
+//       await supabase.from('indemnisations').update({ statut: 'payee', date_paiement: new Date().toISOString(), reference_paiement: reference || null }).eq('id', indemnisation?.id);
+//       await supabase.from('sinistres').update({ montant_indemnisation: indemnisation!.montant_indemnisation, updated_by: user?.id }).eq('id', id);
+//       await ajouterCommunication('notification', `Paiement effectué : ${formatMontant(indemnisation!.montant_indemnisation)}${reference ? ` (Réf: ${reference})` : ''}`);
+//       setSuccess('Paiement enregistré'); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
+//     } catch (err: any) { setError(err.message); }
+//   };
+
+//   const handleAnnulerIndemnisation = async () => {
+//     if (!confirm('Annuler cette indemnisation ?')) return;
+//     try {
+//       await supabase.from('indemnisations').update({ statut: 'annulee' }).eq('id', indemnisation?.id);
+//       await ajouterCommunication('notification', 'Indemnisation annulée');
+//       setSuccess('Indemnisation annulée'); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
+//     } catch (err: any) { setError(err.message); }
 //   };
 
 //   const ajouterCommunication = async (type: string, contenu: string) => {
-//     await supabase.from('sinistre_communications').insert({
-//       sinistre_id: id,
-//       type,
-//       contenu,
-//       expediteur_id: user?.id,
-//     });
+//     await supabase.from('sinistre_communications').insert({ sinistre_id: id, type, contenu, expediteur_id: user?.id });
 //   };
 
-//   const formatDate = (dateString: string) => {
-//     try { return format(new Date(dateString), 'dd MMMM yyyy à HH:mm', { locale: fr }); }
-//     catch { return dateString; }
-//   };
+//   const formatDate = (d: string) => { try { return format(new Date(d), 'dd MMMM yyyy à HH:mm', { locale: fr }); } catch { return d; } };
+//   const formatDateShort = (d: string) => { try { return format(new Date(d), 'dd/MM/yyyy', { locale: fr }); } catch { return d; } };
+//   const formatMontant = (m: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'CDF', maximumFractionDigits: 0 }).format(m);
 
-//   const formatDateShort = (dateString: string) => {
-//     try { return format(new Date(dateString), 'dd/MM/yyyy', { locale: fr }); }
-//     catch { return dateString; }
-//   };
+//   if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><FaSpinner className="h-12 w-12 text-blue-500 animate-spin" /></div>;
+//   if (!sinistre) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-center"><FaExclamationTriangle className="mx-auto h-12 w-12 text-yellow-500" /><p className="mt-4">Dossier non trouvé</p><Link href="/sinistres" className="mt-4 inline-block text-blue-600">Retour aux sinistres</Link></div></div>;
 
-//   const formatMontant = (montant: number) => {
-//     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'CDF', maximumFractionDigits: 0 }).format(montant);
-//   };
-
-//   const getProgressColor = (progress: number) => {
-//     if (progress >= 100) return 'bg-green-500';
-//     if (progress >= 75) return 'bg-indigo-500';
-//     if (progress >= 50) return 'bg-purple-500';
-//     if (progress >= 30) return 'bg-blue-500';
-//     return 'bg-yellow-500';
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-//         <div className="text-center">
-//           <FaSpinner className="mx-auto h-12 w-12 text-blue-500 animate-spin" />
-//           <p className="mt-4 text-gray-600">Chargement du dossier...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   if (!sinistre) {
-//     return (
-//       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-//         <div className="text-center">
-//           <FaExclamationTriangle className="mx-auto h-12 w-12 text-yellow-500" />
-//           <p className="mt-4 text-gray-600">Dossier non trouvé</p>
-//           <Link href="/sinistres" className="mt-4 inline-block text-blue-600 hover:text-blue-800">
-//             Retour aux sinistres
-//           </Link>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   const statutInfo = STATUTS[sinistre.statut] || STATUTS.en_attente;
-//   const StatutIcon = statutInfo.icon;
+//   const statutInfo = STATUTS[statutEffectif] || STATUTS.en_attente;
 //   const isAgent = ['admin', 'agent'].includes(user?.role || '');
 //   const isExpert = user?.role === 'expert';
-//   const monExpertise = isExpert ? expertises.find(e => e.expert_id === user?.id) : null;
+//   const expertiseTerminee = expertises.find(e => e.statut === 'terminee');
 
 //   return (
 //     <div className="min-h-screen bg-gray-50">
-//       {/* En-tête */}
 //       <div className="bg-white border-b border-gray-200">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-//           <Link href="/sinistres" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-3">
-//             <FaArrowLeft className="mr-2 h-4 w-4" />
-//             Retour aux sinistres
-//           </Link>
+//         <div className="max-w-7xl mx-auto px-4 py-4">
+//           <Link href="/agent/sinistres" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-3"><FaArrowLeft className="mr-2 h-4 w-4" />Retour aux sinistres</Link>
 //           <div className="flex items-center justify-between flex-wrap gap-4">
 //             <div>
-//               <h1 className="text-2xl font-semibold text-gray-900 flex items-center">
-//                 <FaFileContract className="mr-3 h-6 w-6 text-blue-600" />
-//                 Dossier {sinistre.numero_dossier}
-//               </h1>
+//               <h1 className="text-2xl font-semibold">Dossier {sinistre.numero_dossier}</h1>
 //               <div className="flex items-center space-x-3 mt-1">
-//                 <StatutBadge statut={sinistre.statut} />
-//                 <span className="text-sm text-gray-500">
-//                   Créé le {formatDateShort(sinistre.created_at)}
-//                 </span>
+//                 <StatutBadge statut={statutEffectif} />
+//                 {isIndemnisationPayee && <span className="text-xs text-green-600 font-medium">(Indemnisation payée)</span>}
+//                 <span className="text-sm text-gray-500">Créé le {formatDateShort(sinistre.created_at)}</span>
 //               </div>
 //             </div>
 //             <div className="flex space-x-2">
 //               {isAgent && (
 //                 <>
-//                   <button onClick={() => setShowDesignateExpert(true)}
-//                     className="inline-flex items-center rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-colors">
-//                     <FaUserTie className="mr-2 h-4 w-4" /> Désigner expert
-//                   </button>
-//                   <button onClick={() => {
-//                     setNewStatus(sinistre.statut);
-//                     setStatusComment('');
-//                     setShowStatusModal(true);
-//                   }}
-//                     className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors">
-//                     <FaEdit className="mr-2 h-4 w-4" /> Changer statut
-//                   </button>
+//                   <button onClick={() => setShowDesignateExpert(true)} className="inline-flex items-center rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"><FaUserTie className="mr-2 h-4 w-4" />Désigner expert</button>
+//                   {expertiseTerminee && !indemnisation && (
+//                     <button onClick={handleInitierIndemnisation} className="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"><FaHandHoldingUsd className="mr-2 h-4 w-4" />Indemnisation</button>
+//                   )}
+//                   {indemnisation && (
+//                     <button onClick={handleInitierIndemnisation} className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"><FaEdit className="mr-2 h-4 w-4" />Indemnisation</button>
+//                   )}
+//                   <button onClick={() => { setNewStatus(sinistre.statut); setShowStatusModal(true); }} className="inline-flex items-center rounded-lg bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"><FaEdit className="mr-2 h-4 w-4" />Statut</button>
 //                 </>
-//               )}
-//               {isExpert && monExpertise && monExpertise.statut !== 'terminee' && (
-//                 <button onClick={() => { 
-//                   setEditingExpertise(monExpertise); 
-//                   setRapportForm({
-//                     rapport: monExpertise.rapport || '',
-//                     conclusion: monExpertise.conclusion || '',
-//                     montant_evalue: monExpertise.montant_evalue || sinistre.montant_estime || 0,
-//                   }); 
-//                   setShowRapportModal(true); 
-//                 }}
-//                   className="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors">
-//                   <FaClipboardCheck className="mr-2 h-4 w-4" /> Soumettre rapport
-//                 </button>
 //               )}
 //             </div>
 //           </div>
 //         </div>
 //       </div>
 
-//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-//         {/* Messages */}
-//         {error && (
-//           <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center">
-//             <FaTimesCircle className="text-red-400 mr-3 h-5 w-5 flex-shrink-0" />
-//             <p className="text-sm text-red-700 flex-1">{error}</p>
-//             <button onClick={() => setError(null)} className="ml-2">
-//               <FaTimes className="h-4 w-4 text-red-400" />
-//             </button>
-//           </div>
-//         )}
-//         {success && (
-//           <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center">
-//             <FaCheckCircle className="text-green-400 mr-3 h-5 w-5 flex-shrink-0" />
-//             <p className="text-sm text-green-700 flex-1">{success}</p>
-//           </div>
-//         )}
+//       <div className="max-w-7xl mx-auto px-4 py-6">
+//         {error && <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center text-sm text-red-700"><FaTimesCircle className="mr-3 h-5 w-5" />{error}<button onClick={() => setError(null)} className="ml-auto"><FaTimes className="h-4 w-4" /></button></div>}
+//         {success && <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center text-sm text-green-700"><FaCheckCircle className="mr-3 h-5 w-5" />{success}</div>}
 
-//         {/* ✅ Barre de progression CORRIGÉE */}
-//         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-//           <div className="flex items-center justify-between mb-3">
-//             <h2 className="text-lg font-semibold text-gray-900">Progression du dossier</h2>
-//             <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${statutInfo.bgColor} ${statutInfo.color}`}>
-//               <StatutIcon className="mr-1.5 h-4 w-4" />
-//               {statutInfo.label}
-//             </span>
+//         {/* Progression */}
+//         <div className="bg-white rounded-lg border p-6 mb-6">
+//           <div className="flex items-center justify-between mb-3"><h2 className="text-lg font-semibold">Progression</h2><StatutBadge statut={statutEffectif} /></div>
+//           <ProgressBar progress={statutInfo.progress} />
+//           <div className="flex justify-between mt-2 text-xs text-gray-500">
+//             {Object.entries(STATUTS).filter(([k]) => !['refuse'].includes(k)).map(([key, val]) => (
+//               <span key={key} className={statutEffectif === key ? 'font-semibold text-gray-900' : ''}>{val.label}</span>
+//             ))}
 //           </div>
-          
-//           {/* Barre de progression */}
-//           <div className="mb-3">
-//             <ProgressBar progress={statutInfo.progress} />
-//           </div>
-          
-//           {/* Étapes de progression */}
-//           <div className="flex justify-between mt-1">
-//             {Object.entries(STATUTS)
-//               .filter(([key]) => !['refuse'].includes(key))
-//               .map(([key, val]) => {
-//                 const IconComponent = val.icon;
-//                 const isActive = statutInfo.progress >= val.progress && val.progress > 0;
-//                 const isCurrent = sinistre.statut === key;
-                
-//                 return (
-//                   <div key={key} className="flex flex-col items-center">
-//                     <div className={`
-//                       w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all
-//                       ${isActive ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}
-//                       ${isCurrent ? 'ring-2 ring-offset-2 ring-blue-500' : ''}
-//                     `}>
-//                       <IconComponent className="h-4 w-4" />
-//                     </div>
-//                     <span className={`text-xs mt-1.5 text-center max-w-[70px] leading-tight ${
-//                       isCurrent ? 'font-semibold text-gray-900' : 'text-gray-500'
-//                     }`}>
-//                       {val.label}
-//                     </span>
-//                   </div>
-//                 );
-//               })}
-//           </div>
-          
-//           {/* Description du statut actuel */}
-//           <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-//             <p className="text-sm text-blue-800">
-//               <FaInfo className="inline mr-1 h-4 w-4" />
-//               {statutInfo.description}
-//             </p>
-//           </div>
+//           <div className="mt-4 p-3 bg-blue-50 rounded-lg"><p className="text-sm text-blue-800"><FaInfo className="inline mr-1" />{statutInfo.description}</p></div>
 //         </div>
 
 //         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-//           {/* Colonne principale */}
 //           <div className="lg:col-span-2 space-y-6">
-//             {/* Infos sinistre */}
-//             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-//               <h2 className="text-lg font-semibold mb-4">Informations du sinistre</h2>
-//               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-//                 <InfoItem 
-//                   label="Type" 
-//                   value={`${TYPES_SINISTRE[sinistre.type_sinistre]?.icon || '📋'} ${TYPES_SINISTRE[sinistre.type_sinistre]?.label || sinistre.type_sinistre}`} 
-//                 />
-//                 <InfoItem label="Date sinistre" value={formatDate(sinistre.date_sinistre)} icon={FaCalendarAlt} />
-//                 <InfoItem label="Lieu" value={sinistre.lieu} icon={FaMapMarkerAlt} />
-//                 <InfoItem 
-//                   label="Montant estimé" 
-//                   value={sinistre.montant_estime ? formatMontant(sinistre.montant_estime) : 'Non spécifié'} 
-//                   icon={FaMoneyBillWave} 
-//                 />
-//                 {sinistre.montant_indemnisation > 0 && (
-//                   <InfoItem 
-//                     label="Indemnisation" 
-//                     value={formatMontant(sinistre.montant_indemnisation)} 
-//                     icon={FaMoneyBillWave} 
-//                     color="text-green-600 font-semibold" 
-//                   />
-//                 )}
-//                 {sinistre.souscription && (
-//                   <InfoItem 
-//                     label="Police" 
-//                     value={sinistre.souscription.police_numero || 'N/A'} 
-//                     icon={FaFileContract} 
-//                   />
-//                 )}
-//               </div>
-//               <div className="mt-4 pt-4 border-t">
-//                 <p className="text-sm font-medium text-gray-500 mb-1">Description</p>
-//                 <p className="text-sm text-gray-900 whitespace-pre-wrap">{sinistre.description}</p>
-//               </div>
-//             </div>
-
-//             {/* Expertises */}
-//             {expertises.length > 0 && (
-//               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-//                 <h2 className="text-lg font-semibold mb-4 flex items-center">
-//                   <FaClipboardList className="mr-2 h-5 w-5 text-purple-600" />
-//                   Expertises ({expertises.length})
-//                 </h2>
-//                 <div className="space-y-4">
-//                   {expertises.map(expertise => (
-//                     <div key={expertise.id} className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition-colors">
-//                       <div className="flex items-center justify-between mb-3">
-//                         <div className="flex items-center">
-//                           <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-//                             <FaUserCheck className="h-5 w-5 text-purple-600" />
-//                           </div>
-//                           <div className="ml-3">
-//                             <p className="text-sm font-medium">{expertise.expert_nom}</p>
-//                             <p className="text-xs text-gray-500">{expertise.expert_email}</p>
-//                           </div>
-//                         </div>
-//                         <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
-//                           expertise.statut === 'terminee' ? 'bg-green-100 text-green-800' :
-//                           expertise.statut === 'en_cours' ? 'bg-blue-100 text-blue-800' :
-//                           'bg-yellow-100 text-yellow-800'
-//                         }`}>
-//                           {expertise.statut === 'terminee' ? '✓ Terminée' :
-//                            expertise.statut === 'en_cours' ? '⟳ En cours' : '⏳ Planifiée'}
-//                         </span>
-//                       </div>
-                      
-//                       <div className="grid grid-cols-2 gap-3 text-sm">
-//                         <div>
-//                           <span className="text-gray-500">Date désignation :</span>
-//                           <span className="ml-1">{formatDateShort(expertise.date_designation)}</span>
-//                         </div>
-//                         {expertise.date_expertise && (
-//                           <div>
-//                             <span className="text-gray-500">Date expertise :</span>
-//                             <span className="ml-1">{formatDateShort(expertise.date_expertise)}</span>
-//                           </div>
-//                         )}
-//                       </div>
-
-//                       {expertise.rapport && (
-//                         <div className="mt-3 pt-3 border-t">
-//                           <p className="text-sm font-medium text-gray-700 mb-1">Rapport d'expertise</p>
-//                           <p className="text-sm text-gray-600 whitespace-pre-wrap">{expertise.rapport}</p>
-//                           {expertise.conclusion && (
-//                             <p className="text-sm mt-2">
-//                               <span className="font-medium">Conclusion :</span> {expertise.conclusion}
-//                             </p>
-//                           )}
-//                           {expertise.montant_evalue != null && expertise.montant_evalue > 0 && (
-//                             <p className="text-sm font-semibold text-purple-600 mt-1">
-//                               Montant évalué : {formatMontant(expertise.montant_evalue)}
-//                             </p>
-//                           )}
-//                         </div>
-//                       )}
-
-//                       {expertise.documents?.length > 0 && (
-//                         <div className="mt-3 pt-3 border-t">
-//                           <p className="text-xs text-gray-500 mb-2">Documents d'expertise</p>
-//                           <div className="space-y-1">
-//                             {expertise.documents.map((doc: ExpertiseDocument) => (
-//                               <a key={doc.id} href={doc.url_fichier} target="_blank" rel="noopener noreferrer"
-//                                 className="flex items-center text-sm text-blue-600 hover:text-blue-800">
-//                                 <FaDownload className="mr-2 h-3 w-3" /> {doc.nom_fichier}
-//                               </a>
-//                             ))}
-//                           </div>
-//                         </div>
-//                       )}
-//                     </div>
-//                   ))}
+//             {/* Détails - SONAS ou Normal */}
+//             {sonasDeclaration ? (
+//               <div className="bg-white rounded-lg border-2 border-blue-200 overflow-hidden">
+//                 <div className="bg-blue-600 text-white px-6 py-3 flex items-center justify-between">
+//                   <div className="flex items-center gap-3"><FaCar className="h-5 w-5" /><h2 className="text-lg font-semibold">Déclaration d'Accident Automobile - SONAS</h2></div>
+//                   <button onClick={() => setShowAllSonasDetails(!showAllSonasDetails)} className="flex items-center gap-2 px-4 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm transition-colors">
+//                     {showAllSonasDetails ? <><FaMinus className="h-3 w-3" /> Moins de détails</> : <><FaPlus className="h-3 w-3" /> Plus de détails</>}
+//                   </button>
 //                 </div>
+//                 <div className="p-6 space-y-4">
+//                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm bg-blue-50 p-4 rounded-lg">
+//                     <div><p className="text-gray-500">N° Dossier</p><p className="font-semibold text-blue-700">{sonasDeclaration.claim_no}</p></div>
+//                     <div><p className="text-gray-500">Date accident</p><p className="font-medium">{formatDate(sonasDeclaration.date_heure_accident)}</p></div>
+//                     <div><p className="text-gray-500">Lieu</p><p className="font-medium truncate">{sonasDeclaration.lieu_accident}</p></div>
+//                     <div><p className="text-gray-500">Véhicule</p><p className="font-medium">{sonasDeclaration.vehicule_marque_type || '-'} - {sonasDeclaration.vehicule_plaque || '-'}</p></div>
+//                   </div>
+
+//                   {showAllSonasDetails && (
+//                     <div className="space-y-4 pt-4 border-t">
+//                       <CollapsibleSection title="Informations générales" icon={<FaFileAlt className="h-4 w-4" />} defaultOpen={true}>
+//                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+//                           <div><p className="text-gray-500">Agence</p><p className="font-medium">{sonasDeclaration.agence}</p></div>
+//                           <div><p className="text-gray-500">Police</p><p className="font-medium">{sonasDeclaration.police || '-'}</p></div>
+//                           <div><p className="text-gray-500">Garantie</p><p className="font-medium">{sonasDeclaration.garantie || '-'}</p></div>
+//                           <div><p className="text-gray-500">Téléphone</p><p className="font-medium">{sonasDeclaration.telephone || '-'}</p></div>
+//                           {sonasDeclaration.valable_du && <div><p className="text-gray-500">Valable du</p><p className="font-medium">{formatDateShort(sonasDeclaration.valable_du)}</p></div>}
+//                           {sonasDeclaration.valable_au && <div><p className="text-gray-500">Au</p><p className="font-medium">{formatDateShort(sonasDeclaration.valable_au)}</p></div>}
+//                         </div>
+//                       </CollapsibleSection>
+//                       <CollapsibleSection title="2. Preneur d'assurance" icon={<FaUser className="h-4 w-4" />}>
+//                         <div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Nom</p><p className="font-medium">{sonasDeclaration.preneur_nom || '-'}</p></div><div><p className="text-gray-500">Prénoms</p><p className="font-medium">{sonasDeclaration.preneur_prenoms || '-'}</p></div><div className="col-span-2"><p className="text-gray-500">Adresse</p><p className="font-medium">{sonasDeclaration.preneur_adresse || '-'}</p></div></div>
+//                       </CollapsibleSection>
+//                       <CollapsibleSection title="3. Conducteur" icon={<FaIdCard className="h-4 w-4" />}>
+//                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm"><div><p className="text-gray-500">Nom et prénom</p><p className="font-medium">{sonasDeclaration.conducteur_nom_prenom || '-'}</p></div><div><p className="text-gray-500">Âge</p><p className="font-medium">{sonasDeclaration.conducteur_age || '-'}</p></div><div><p className="text-gray-500">À votre service ?</p><p className="font-medium">{sonasDeclaration.conducteur_a_service === true ? 'Oui' : sonasDeclaration.conducteur_a_service === false ? 'Non' : '-'}</p></div><div className="col-span-2"><p className="text-gray-500">Titre de conduite</p><p className="font-medium">{sonasDeclaration.conducteur_titre_conduite || '-'}</p></div><div><p className="text-gray-500">Permis n°</p><p className="font-medium">{sonasDeclaration.permis_no || '-'}</p></div><div><p className="text-gray-500">Délivré à</p><p className="font-medium">{sonasDeclaration.permis_delivre_a || '-'}</p></div><div><p className="text-gray-500">Date permis</p><p className="font-medium">{sonasDeclaration.permis_date ? formatDateShort(sonasDeclaration.permis_date) : '-'}</p></div></div>
+//                       </CollapsibleSection>
+//                       <CollapsibleSection title="4. Véhicule" icon={<FaCar className="h-4 w-4" />}>
+//                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"><div><p className="text-gray-500">Marque et type</p><p className="font-medium">{sonasDeclaration.vehicule_marque_type || '-'}</p></div><div><p className="text-gray-500">Plaque</p><p className="font-medium">{sonasDeclaration.vehicule_plaque || '-'}</p></div><div><p className="text-gray-500">Châssis</p><p className="font-medium">{sonasDeclaration.vehicule_chassis || '-'}</p></div><div><p className="text-gray-500">Moteur</p><p className="font-medium">{sonasDeclaration.vehicule_moteur || '-'}</p></div><div><p className="text-gray-500">Puissance</p><p className="font-medium">{sonasDeclaration.vehicule_puissance || '-'}</p></div><div><p className="text-gray-500">Année</p><p className="font-medium">{sonasDeclaration.vehicule_annee || '-'}</p></div><div><p className="text-gray-500">Kilométrage</p><p className="font-medium">{sonasDeclaration.vehicule_kilometrage ? `${sonasDeclaration.vehicule_kilometrage} km` : '-'}</p></div><div><p className="text-gray-500">Valeur</p><p className="font-medium">{sonasDeclaration.vehicule_valeur ? formatMontant(sonasDeclaration.vehicule_valeur) : '-'}</p></div></div>
+//                         <div className="mt-3 pt-3 border-t"><p className="text-xs text-gray-500 mb-2">Garanties :</p><div className="flex gap-4"><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_rc ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>R.C.</span><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_dm ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>D.M.</span><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_inc ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>Inc.</span><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_vol ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>Vol</span></div></div>
+//                       </CollapsibleSection>
+//                       <CollapsibleSection title="5. Description de l'accident" icon={<FaClipboardList className="h-4 w-4" />}><p className="text-sm whitespace-pre-wrap">{sonasDeclaration.description_accident || 'Aucune description'}</p></CollapsibleSection>
+//                       <CollapsibleSection title="6. Dégâts de votre véhicule" icon={<FaTools className="h-4 w-4" />}><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Description</p><p className="font-medium whitespace-pre-wrap">{sonasDeclaration.degats_description || '-'}</p></div><div><p className="text-gray-500">Montant évalué</p><p className="font-medium">{sonasDeclaration.degats_montant_evalue ? formatMontant(sonasDeclaration.degats_montant_evalue) : '-'}</p></div></div></CollapsibleSection>
+//                       <CollapsibleSection title="7. Garage"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Véhicule immobilisé ?</p><p className="font-medium">{sonasDeclaration.vehicule_immobilise === true ? 'Oui' : sonasDeclaration.vehicule_immobilise === false ? 'Non' : '-'}</p></div><div><p className="text-gray-500">Lieu de garde</p><p className="font-medium">{sonasDeclaration.lieu_garde_expertise || '-'}</p></div></div></CollapsibleSection>
+//                       <CollapsibleSection title="8. Adversaire"><div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"><div><p className="text-gray-500">Nom</p><p className="font-medium">{sonasDeclaration.adversaire_nom || '-'}</p></div><div><p className="text-gray-500">Post-nom</p><p className="font-medium">{sonasDeclaration.adversaire_post_nom || '-'}</p></div><div><p className="text-gray-500">Prénom</p><p className="font-medium">{sonasDeclaration.adversaire_prenom || '-'}</p></div><div className="col-span-4"><p className="text-gray-500">Adresse</p><p className="font-medium">{sonasDeclaration.adversaire_adresse || '-'}</p></div><div><p className="text-gray-500">Véhicule</p><p className="font-medium">{sonasDeclaration.adversaire_vehicule || '-'}</p></div><div><p className="text-gray-500">Plaque</p><p className="font-medium">{sonasDeclaration.adversaire_plaque || '-'}</p></div><div><p className="text-gray-500">Assurance</p><p className="font-medium">{sonasDeclaration.adversaire_assurance || '-'}</p></div><div><p className="text-gray-500">Téléphone</p><p className="font-medium">{sonasDeclaration.adversaire_telephone || '-'}</p></div></div></CollapsibleSection>
+//                       <CollapsibleSection title="9. Dégâts matériels (tiers)"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Description</p><p className="font-medium whitespace-pre-wrap">{sonasDeclaration.degats_materiels_description || '-'}</p></div><div><p className="text-gray-500">Dégâts évalués à</p><p className="font-medium">{sonasDeclaration.degats_materiels_evalues ? formatMontant(sonasDeclaration.degats_materiels_evalues) : '-'}</p></div></div></CollapsibleSection>
+//                       <CollapsibleSection title="10. Blessés ou morts" icon={<FaUserInjured className="h-4 w-4" />}><div className="space-y-3 text-sm"><div><p className="text-gray-500">Blessés ou morts ?</p><p className="font-medium">{sonasDeclaration.blesses_ou_morts ? 'Oui' : 'Non'}</p></div>{sonasDeclaration.victimes_infos && <div><p className="text-gray-500">Victimes</p><p className="font-medium whitespace-pre-wrap">{sonasDeclaration.victimes_infos}</p></div>}{sonasDeclaration.victimes_soins_lieu && <div><p className="text-gray-500">Lieu des soins</p><p className="font-medium">{sonasDeclaration.victimes_soins_lieu}</p></div>}<div className="grid grid-cols-2 gap-4">{sonasDeclaration.hopital_nom_adresse && <div><p className="text-gray-500">Hôpital</p><p className="font-medium">{sonasDeclaration.hopital_nom_adresse}</p></div>}{sonasDeclaration.medecin_nom && <div><p className="text-gray-500">Médecin</p><p className="font-medium">{sonasDeclaration.medecin_nom}</p></div>}</div>{sonasDeclaration.medecin_telephone && <div><p className="text-gray-500">Tél médecin</p><p className="font-medium">{sonasDeclaration.medecin_telephone}</p></div>}</div></CollapsibleSection>
+//                       {sonasDeclaration.tiers_transportes && <CollapsibleSection title="11. Tiers transportés"><p className="text-sm whitespace-pre-wrap">{sonasDeclaration.tiers_transportes}</p></CollapsibleSection>}
+//                       {sonasDeclaration.temoins && <CollapsibleSection title="12. Témoins"><p className="text-sm whitespace-pre-wrap">{sonasDeclaration.temoins}</p></CollapsibleSection>}
+//                       <CollapsibleSection title="13. Autorités"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">PV par</p><p className="font-medium">{sonasDeclaration.pv_par || '-'}</p></div><div><p className="text-gray-500">Localité</p><p className="font-medium">{sonasDeclaration.localite || '-'}</p></div><div><p className="text-gray-500">Gendarmerie</p><p className="font-medium">{sonasDeclaration.gendarmerie || '-'}</p></div><div><p className="text-gray-500">Officier</p><p className="font-medium">{sonasDeclaration.officier_gendarme || '-'}</p></div></div></CollapsibleSection>
+//                       <CollapsibleSection title="14. Prime d'assurance"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Dernière prime payée ?</p><p className="font-medium">{sonasDeclaration.prime_payee === true ? 'Oui' : sonasDeclaration.prime_payee === false ? 'Non' : '-'}</p></div>{sonasDeclaration.prime_date && <div><p className="text-gray-500">Date</p><p className="font-medium">{formatDateShort(sonasDeclaration.prime_date)}</p></div>}</div></CollapsibleSection>
+//                       <CollapsibleSection title="Signature"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Fait à</p><p className="font-medium">{sonasDeclaration.fait_a || '-'}</p></div><div><p className="text-gray-500">Date</p><p className="font-medium">{sonasDeclaration.date_signature ? formatDateShort(sonasDeclaration.date_signature) : '-'}</p></div></div></CollapsibleSection>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             ) : (
+//               <div className="bg-white rounded-lg border p-6">
+//                 <h2 className="text-lg font-semibold mb-4">Informations du sinistre</h2>
+//                 <div className="grid grid-cols-2 gap-4 text-sm">
+//                   <div><p className="text-gray-500">Type</p><p>{TYPES_SINISTRE[sinistre.type_sinistre]?.icon} {TYPES_SINISTRE[sinistre.type_sinistre]?.label || sinistre.type_sinistre}</p></div>
+//                   <div><p className="text-gray-500">Date</p><p>{formatDate(sinistre.date_sinistre)}</p></div>
+//                   <div><p className="text-gray-500">Lieu</p><p>{sinistre.lieu}</p></div>
+//                   <div><p className="text-gray-500">Montant estimé</p><p className="font-medium">{formatMontant(sinistre.montant_estime)}</p></div>
+//                   {sinistre.montant_indemnisation > 0 && <div><p className="text-gray-500">Indemnisé</p><p className="font-medium text-green-600">{formatMontant(sinistre.montant_indemnisation)}</p></div>}
+//                   {sinistre.souscription && <div><p className="text-gray-500">Police</p><p>{sinistre.souscription.police_numero || 'N/A'}</p></div>}
+//                 </div>
+//                 <div className="mt-4 pt-4 border-t"><p className="text-sm text-gray-500 mb-1">Description</p><p className="text-sm whitespace-pre-wrap">{sinistre.description}</p></div>
 //               </div>
 //             )}
 
-//             {/* Documents */}
-//             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-//               <div className="flex items-center justify-between mb-4">
-//                 <h2 className="text-lg font-semibold">Documents ({documents.length})</h2>
-//                 <label className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 cursor-pointer transition-colors">
-//                   <FaUpload className="mr-2 h-4 w-4" />
-//                   Ajouter
-//                   <input 
-//                     type="file" 
-//                     multiple 
-//                     className="hidden" 
-//                     onChange={(e) => e.target.files && handleUploadDocument(e.target.files)}
-//                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-//                   />
-//                 </label>
+//             {/* Indemnisation */}
+//             {indemnisation && (
+//               <div className="bg-white rounded-lg border border-green-200 p-6">
+//                 <div className="flex items-center justify-between mb-4"><h2 className="text-lg font-semibold"><FaHandHoldingUsd className="inline mr-2 text-green-600" />Indemnisation</h2><span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${INDEMNISATION_STATUTS[indemnisation.statut]?.bgColor} ${INDEMNISATION_STATUTS[indemnisation.statut]?.color}`}>{INDEMNISATION_STATUTS[indemnisation.statut]?.label}</span></div>
+//                 <div className="grid grid-cols-2 gap-4 text-sm mb-4"><div><p className="text-gray-500">Montant</p><p className="text-xl font-bold text-green-600">{formatMontant(indemnisation.montant_indemnisation)}</p></div><div><p className="text-gray-500">Mode</p><p className="font-medium">{MODES_PAIEMENT[indemnisation.mode_paiement] || indemnisation.mode_paiement}</p></div>{indemnisation.date_validation && <div><p className="text-gray-500">Date validation</p><p>{formatDateShort(indemnisation.date_validation)}</p></div>}{indemnisation.date_paiement && <div><p className="text-gray-500">Date paiement</p><p>{formatDateShort(indemnisation.date_paiement)}</p></div>}{indemnisation.reference_paiement && <div><p className="text-gray-500">Référence</p><p className="font-mono">{indemnisation.reference_paiement}</p></div>}</div>
+//                 {indemnisation.commentaire && <div className="bg-gray-50 rounded-lg p-3 mb-4"><p className="text-sm text-gray-600">{indemnisation.commentaire}</p></div>}
+//                 {isAgent && (
+//                   <div className="flex flex-wrap gap-2 pt-2 border-t">
+//                     <button onClick={handleInitierIndemnisation} className="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700">Modifier</button>
+//                     {indemnisation.statut === 'en_attente' && <button onClick={handleValidateIndemnisation} className="px-3 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700">Valider</button>}
+//                     {indemnisation.statut === 'validee' && <button onClick={handlePayerIndemnisation} className="px-3 py-1.5 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700">Payer</button>}
+//                     {(indemnisation.statut === 'en_attente' || indemnisation.statut === 'validee') && <button onClick={handleAnnulerIndemnisation} className="px-3 py-1.5 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700">Annuler</button>}
+//                   </div>
+//                 )}
 //               </div>
-//               {documents.length === 0 ? (
-//                 <div className="text-center py-8">
-//                   <FaFileAlt className="mx-auto h-12 w-12 text-gray-300" />
-//                   <p className="mt-2 text-sm text-gray-500">Aucun document</p>
-//                 </div>
-//               ) : (
-//                 <div className="space-y-2">
-//                   {documents.map((doc: any) => (
-//                     <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-//                       <div className="flex items-center flex-1 min-w-0">
-//                         <FaFileAlt className="h-5 w-5 text-blue-500 mr-3 flex-shrink-0" />
-//                         <div className="min-w-0">
-//                           <p className="text-sm font-medium truncate">{doc.nom_fichier}</p>
-//                           <p className="text-xs text-gray-500">
-//                             {doc.taille_fichier ? `${(doc.taille_fichier / 1024 / 1024).toFixed(2)} MB` : ''}
-//                             {doc.created_at ? ` • ${formatDateShort(doc.created_at)}` : ''}
-//                           </p>
-//                         </div>
-//                       </div>
-//                       <a href={doc.url_fichier} target="_blank" rel="noopener noreferrer" 
-//                         className="ml-3 text-blue-600 hover:text-blue-800 flex-shrink-0">
-//                         <FaDownload className="h-5 w-5" />
-//                       </a>
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </div>
+//             )}
+
+//             {/* Expertises */}
+//             {expertises.length > 0 && (
+//               <div className="bg-white rounded-lg border p-6"><h2 className="text-lg font-semibold mb-4">Expertises ({expertises.length})</h2><div className="space-y-4">{expertises.map(expertise => (<div key={expertise.id} className="border rounded-lg p-4"><div className="flex items-center justify-between mb-3"><div className="flex items-center"><div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center"><FaUserCheck className="h-5 w-5 text-purple-600" /></div><div className="ml-3"><p className="text-sm font-medium">{expertise.expert_nom}</p><p className="text-xs text-gray-500">{expertise.expert_email}</p></div></div><span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${expertise.statut === 'terminee' ? 'bg-green-100 text-green-800' : expertise.statut === 'en_cours' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}>{expertise.statut === 'terminee' ? '✓ Terminée' : expertise.statut === 'en_cours' ? '⟳ En cours' : '⏳ Planifiée'}</span></div>{expertise.rapport && (<div className="mt-3 pt-3 border-t"><p className="text-sm font-medium mb-1">Rapport</p><p className="text-sm text-gray-600 whitespace-pre-wrap">{expertise.rapport}</p>{expertise.montant_evalue != null && expertise.montant_evalue > 0 && <p className="text-sm font-semibold text-purple-600 mt-1">Montant évalué : {formatMontant(expertise.montant_evalue)}</p>}</div>)}</div>))}</div></div>
+//             )}
+
+//             {/* Documents */}
+//             <div className="bg-white rounded-lg border p-6"><div className="flex items-center justify-between mb-4"><h2 className="text-lg font-semibold">Documents ({documents.length})</h2><label className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 cursor-pointer"><FaUpload className="mr-2 h-4 w-4" />Ajouter<input type="file" multiple className="hidden" onChange={(e) => e.target.files && handleUploadDocument(e.target.files)} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" /></label></div>{documents.length === 0 ? <p className="text-sm text-gray-500 text-center py-8">Aucun document</p> : (<div className="space-y-2">{documents.map((doc: any) => (<div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div className="flex items-center min-w-0"><FaFileAlt className="h-5 w-5 text-blue-500 mr-3" /><div className="min-w-0"><p className="text-sm font-medium truncate">{doc.nom_fichier}</p><p className="text-xs text-gray-500">{doc.created_at ? formatDateShort(doc.created_at) : ''}</p></div></div><a href={doc.url_fichier} target="_blank" rel="noopener noreferrer" className="ml-3 text-blue-600"><FaDownload className="h-5 w-5" /></a></div>))}</div>)}</div>
 //           </div>
 
 //           {/* Sidebar */}
 //           <div className="space-y-6">
-//             {/* Carte Assuré */}
-//             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-//               <h2 className="text-lg font-semibold mb-4 flex items-center">
-//                 <FaUser className="mr-2 h-4 w-4 text-gray-400" />
-//                 Assuré
-//               </h2>
-//               <div className="flex items-center mb-3">
-//                 <AssureAvatar assure={sinistre.assure || { nom: '', email: '' }} size="lg" />
-//                 <div className="ml-3">
-//                   <p className="text-sm font-medium">{sinistre.assure?.nom || 'Inconnu'}</p>
-//                   <p className="text-xs text-gray-500">{sinistre.assure?.email}</p>
-//                 </div>
-//               </div>
-//               {sinistre.assure?.telephone && (
-//                 <div className="flex items-center text-sm text-gray-600 border-t pt-3">
-//                   <FaPhone className="mr-2 h-3 w-3 text-gray-400" />
-//                   {sinistre.assure.telephone}
-//                 </div>
-//               )}
-//             </div>
-
-//             {/* Communication rapide */}
-//             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-//               <h2 className="text-lg font-semibold mb-3 flex items-center">
-//                 <FaComments className="mr-2 h-4 w-4 text-blue-500" />
-//                 Communication
-//               </h2>
-//               <div className="space-y-2 mb-3 max-h-64 overflow-y-auto">
-//                 {communications.length === 0 ? (
-//                   <p className="text-sm text-gray-500 text-center py-4">Aucune communication</p>
-//                 ) : (
-//                   communications.slice(0, 10).map(comm => (
-//                     <div key={comm.id} className={`p-2 rounded text-sm ${
-//                       comm.type === 'notification' ? 'bg-blue-50 border border-blue-100' :
-//                       comm.type === 'reclamation' ? 'bg-orange-50 border border-orange-100' :
-//                       'bg-gray-50 border border-gray-100'
-//                     }`}>
-//                       <div className="flex items-center justify-between mb-0.5">
-//                         <span className="text-xs font-medium">{comm.expediteur_nom}</span>
-//                         <span className="text-xs text-gray-400">{formatDate(comm.created_at)}</span>
-//                       </div>
-//                       <p className="text-xs text-gray-700 whitespace-pre-wrap">{comm.contenu}</p>
-//                     </div>
-//                   ))
-//                 )}
-//               </div>
-//               <div className="flex space-x-2">
-//                 <input 
-//                   type="text" 
-//                   value={newMessage} 
-//                   onChange={(e) => setNewMessage(e.target.value)}
-//                   placeholder="Ajouter un message..."
-//                   className="flex-1 text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-//                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} 
-//                 />
-//                 <button 
-//                   onClick={handleSendMessage}
-//                   disabled={!newMessage.trim()}
-//                   className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors"
-//                 >
-//                   <FaPaperPlane className="h-4 w-4" />
-//                 </button>
-//               </div>
-//             </div>
-
-//             {/* Historique */}
-//             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-//               <h2 className="text-lg font-semibold mb-4 flex items-center">
-//                 <FaHistory className="mr-2 h-4 w-4 text-gray-400" />
-//                 Historique
-//               </h2>
-//               {historique.length === 0 ? (
-//                 <p className="text-sm text-gray-500 text-center py-4">Aucun historique</p>
-//               ) : (
-//                 <div className="space-y-3 max-h-80 overflow-y-auto">
-//                   {historique.map(entry => (
-//                     <div key={entry.id} className="border-l-2 border-blue-200 pl-3">
-//                       <p className="text-xs text-gray-400">{formatDate(entry.created_at)}</p>
-//                       <p className="text-sm">
-//                         {entry.ancien_statut && (
-//                           <span className="text-gray-500">
-//                             {STATUTS[entry.ancien_statut]?.label || entry.ancien_statut} →{' '}
-//                           </span>
-//                         )}
-//                         <span className="font-medium">
-//                           {STATUTS[entry.nouveau_statut]?.label || entry.nouveau_statut}
-//                         </span>
-//                       </p>
-//                       {entry.commentaire && (
-//                         <p className="text-xs text-gray-600 mt-0.5">{entry.commentaire}</p>
-//                       )}
-//                       <p className="text-xs text-gray-400">
-//                         Par {entry.modifie_par?.nom || 'Système'}
-//                       </p>
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </div>
+//             <div className="bg-white rounded-lg border p-6"><h2 className="text-lg font-semibold mb-4"><FaUser className="inline mr-2 text-gray-400" />Assuré</h2><div className="flex items-center mb-3"><AssureAvatar assure={sinistre.assure || { nom: '', email: '' }} size="lg" /><div className="ml-3"><p className="text-sm font-medium">{sinistre.assure?.nom || 'Inconnu'}</p><p className="text-xs text-gray-500">{sinistre.assure?.email}</p></div></div>{sinistre.assure?.telephone && <div className="flex items-center text-sm text-gray-600 border-t pt-3"><FaPhone className="mr-2 h-3 w-3 text-gray-400" />{sinistre.assure.telephone}</div>}</div>
+//             <div className="bg-white rounded-lg border p-6"><h2 className="text-lg font-semibold mb-3"><FaComments className="inline mr-2 text-blue-500" />Communication</h2><div className="space-y-2 mb-3 max-h-64 overflow-y-auto">{communications.length === 0 ? <p className="text-sm text-gray-500 text-center py-4">Aucune communication</p> : communications.slice(0, 10).map(comm => (<div key={comm.id} className={`p-2 rounded text-sm ${comm.type === 'notification' ? 'bg-blue-50' : 'bg-gray-50'}`}><div className="flex justify-between mb-0.5"><span className="text-xs font-medium">{comm.expediteur_nom}</span><span className="text-xs text-gray-400">{formatDate(comm.created_at)}</span></div><p className="text-xs whitespace-pre-wrap">{comm.contenu}</p></div>))}</div><div className="flex space-x-2"><input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} placeholder="Message..." className="flex-1 text-sm border rounded-lg px-3 py-2" onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} /><button onClick={handleSendMessage} disabled={!newMessage.trim()} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50"><FaPaperPlane className="h-4 w-4" /></button></div></div>
+//             <div className="bg-white rounded-lg border p-6"><h2 className="text-lg font-semibold mb-4"><FaHistory className="inline mr-2 text-gray-400" />Historique</h2>{historique.length === 0 ? <p className="text-sm text-gray-500 text-center py-4">Aucun historique</p> : (<div className="space-y-3 max-h-80 overflow-y-auto">{historique.map(entry => (<div key={entry.id} className="border-l-2 border-blue-200 pl-3"><p className="text-xs text-gray-400">{formatDate(entry.created_at)}</p><p className="text-sm"><span className="font-medium">{entry.commentaire || `${entry.ancien_statut} → ${entry.nouveau_statut}`}</span></p></div>))}</div>)}</div>
 //           </div>
 //         </div>
 //       </div>
 
-//       {/* Modal Désignation Expert */}
-//       {showDesignateExpert && (
-//         <Modal onClose={() => setShowDesignateExpert(false)} title="Désigner un expert">
-//           <div className="space-y-4">
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
-//                 Expert <span className="text-red-500">*</span>
-//               </label>
-//               <select 
-//                 value={selectedExpert} 
-//                 onChange={(e) => setSelectedExpert(e.target.value)}
-//                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-//               >
-//                 <option value="">Sélectionner un expert</option>
-//                 {experts.map(expert => (
-//                   <option key={expert.id} value={expert.id}>
-//                     {expert.nom} ({expert.email})
-//                   </option>
-//                 ))}
-//               </select>
-//             </div>
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
-//                 Date d'expertise <span className="text-red-500">*</span>
-//               </label>
-//               <input 
-//                 type="datetime-local" 
-//                 value={dateExpertise} 
-//                 onChange={(e) => setDateExpertise(e.target.value)}
-//                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500" 
-//               />
-//             </div>
-//             <div className="flex space-x-3 pt-2">
-//               <button 
-//                 onClick={handleDesignateExpert}
-//                 disabled={!selectedExpert || !dateExpertise}
-//                 className="flex-1 bg-purple-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-//               >
-//                 <FaUserCheck className="inline mr-2 h-4 w-4" />
-//                 Désigner
-//               </button>
-//               <button 
-//                 onClick={() => setShowDesignateExpert(false)}
-//                 className="flex-1 border border-gray-300 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-//               >
-//                 Annuler
-//               </button>
-//             </div>
-//           </div>
-//         </Modal>
-//       )}
-
-//       {/* Modal Rapport Expertise */}
-//       {showRapportModal && (
-//         <Modal onClose={() => setShowRapportModal(false)} title="Rapport d'expertise">
-//           <div className="space-y-4">
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
-//                 Rapport détaillé <span className="text-red-500">*</span>
-//               </label>
-//               <textarea 
-//                 value={rapportForm.rapport} 
-//                 onChange={(e) => setRapportForm({...rapportForm, rapport: e.target.value})}
-//                 rows={5} 
-//                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="Décrivez les dommages constatés, les circonstances..." 
-//               />
-//             </div>
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">Conclusion</label>
-//               <textarea 
-//                 value={rapportForm.conclusion} 
-//                 onChange={(e) => setRapportForm({...rapportForm, conclusion: e.target.value})}
-//                 rows={2} 
-//                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="Votre conclusion sur le sinistre..." 
-//               />
-//             </div>
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
-//                 Montant évalué (CDF) <span className="text-red-500">*</span>
-//               </label>
-//               <input 
-//                 type="number" 
-//                 value={rapportForm.montant_evalue}
-//                 onChange={(e) => setRapportForm({...rapportForm, montant_evalue: Number(e.target.value)})}
-//                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 min="0"
-//               />
-//             </div>
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">Photos / Documents</label>
-//               <input 
-//                 type="file" 
-//                 multiple 
-//                 onChange={(e) => setRapportFiles(e.target.files ? Array.from(e.target.files) : [])}
-//                 className="w-full text-sm" 
-//                 accept=".jpg,.jpeg,.png,.pdf" 
-//               />
-//               {rapportFiles.length > 0 && (
-//                 <p className="text-xs text-gray-500 mt-1">{rapportFiles.length} fichier(s) sélectionné(s)</p>
-//               )}
-//             </div>
-//             <div className="flex space-x-3 pt-2">
-//               <button 
-//                 onClick={handleSubmitRapport}
-//                 disabled={!rapportForm.rapport || !rapportForm.montant_evalue}
-//                 className="flex-1 bg-green-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-//               >
-//                 <FaPaperPlane className="inline mr-2 h-4 w-4" />
-//                 Soumettre le rapport
-//               </button>
-//               <button 
-//                 onClick={() => setShowRapportModal(false)}
-//                 className="flex-1 border border-gray-300 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-//               >
-//                 Annuler
-//               </button>
-//             </div>
-//           </div>
-//         </Modal>
-//       )}
-
-//       {/* Modal Changement Statut */}
-//       {showStatusModal && (
-//         <Modal onClose={() => setShowStatusModal(false)} title="Changer le statut">
-//           <div className="space-y-4">
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
-//                 Nouveau statut <span className="text-red-500">*</span>
-//               </label>
-//               <select 
-//                 value={newStatus} 
-//                 onChange={(e) => setNewStatus(e.target.value)}
-//                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-//               >
-//                 <option value="">Sélectionner un statut</option>
-//                 {Object.entries(STATUTS).map(([key, val]) => (
-//                   <option key={key} value={key}>
-//                     {val.label}
-//                   </option>
-//                 ))}
-//               </select>
-//             </div>
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">Commentaire</label>
-//               <textarea 
-//                 value={statusComment} 
-//                 onChange={(e) => setStatusComment(e.target.value)}
-//                 rows={2} 
-//                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-//                 placeholder="Raison du changement de statut..." 
-//               />
-//             </div>
-//             <div className="flex space-x-3 pt-2">
-//               <button 
-//                 onClick={handleChangeStatus} 
-//                 disabled={!newStatus}
-//                 className="flex-1 bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-//               >
-//                 <FaCheck className="inline mr-2 h-4 w-4" />
-//                 Confirmer
-//               </button>
-//               <button 
-//                 onClick={() => setShowStatusModal(false)}
-//                 className="flex-1 border border-gray-300 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-//               >
-//                 Annuler
-//               </button>
-//             </div>
-//           </div>
-//         </Modal>
-//       )}
+//       {/* Modals */}
+//       {showDesignateExpert && (<Modal onClose={() => setShowDesignateExpert(false)} title="Désigner un expert"><div className="space-y-4"><div><label className="block text-sm font-medium mb-1">Expert *</label><select value={selectedExpert} onChange={(e) => setSelectedExpert(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm"><option value="">Sélectionner</option>{experts.map(e => <option key={e.id} value={e.id}>{e.nom}</option>)}</select></div><div><label className="block text-sm font-medium mb-1">Date expertise *</label><input type="datetime-local" value={dateExpertise} onChange={(e) => setDateExpertise(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" /></div><div className="flex space-x-3 pt-2"><button onClick={handleDesignateExpert} disabled={!selectedExpert || !dateExpertise} className="flex-1 bg-purple-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-purple-700 disabled:opacity-50">Désigner</button><button onClick={() => setShowDesignateExpert(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button></div></div></Modal>)}
+//       {showStatusModal && (<Modal onClose={() => setShowStatusModal(false)} title="Changer le statut"><div className="space-y-4"><div><label className="block text-sm font-medium mb-1">Nouveau statut *</label><select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm"><option value="">Sélectionner</option>{Object.entries(STATUTS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</select></div><div><label className="block text-sm font-medium mb-1">Commentaire</label><textarea value={statusComment} onChange={(e) => setStatusComment(e.target.value)} rows={2} className="w-full border rounded-lg px-3 py-2 text-sm" /></div><div className="flex space-x-3 pt-2"><button onClick={handleChangeStatus} disabled={!newStatus} className="flex-1 bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">Confirmer</button><button onClick={() => setShowStatusModal(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button></div></div></Modal>)}
+//       {showIndemnisationModal && (<Modal onClose={() => setShowIndemnisationModal(false)} title="Gérer l'indemnisation"><div className="space-y-4"><div><label className="block text-sm font-medium mb-1">Montant (CDF) *</label><input type="number" value={indemnisationForm.montant_indemnisation} onChange={(e) => setIndemnisationForm({...indemnisationForm, montant_indemnisation: Number(e.target.value)})} className="w-full border rounded-lg px-3 py-2 text-sm" min="0" /></div><div><label className="block text-sm font-medium mb-1">Mode de paiement</label><select value={indemnisationForm.mode_paiement} onChange={(e) => setIndemnisationForm({...indemnisationForm, mode_paiement: e.target.value})} className="w-full border rounded-lg px-3 py-2 text-sm">{Object.entries(MODES_PAIEMENT).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></div><div><label className="block text-sm font-medium mb-1">Commentaire</label><textarea value={indemnisationForm.commentaire} onChange={(e) => setIndemnisationForm({...indemnisationForm, commentaire: e.target.value})} rows={3} className="w-full border rounded-lg px-3 py-2 text-sm" /></div><div className="flex space-x-3 pt-2"><button onClick={handleSaveIndemnisation} disabled={saving || !indemnisationForm.montant_indemnisation} className="flex-1 bg-green-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-green-700 disabled:opacity-50">{saving ? <FaSpinner className="animate-spin inline mr-1" /> : null}{indemnisation?.id ? 'Mettre à jour' : "Initier l'indemnisation"}</button><button onClick={() => setShowIndemnisationModal(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button></div></div></Modal>)}
 //     </div>
 //   );
 // }
-
-// app/sinistres/[id]/page.tsx
+// app/agent/sinistres/[id]/page.tsx
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
@@ -1206,11 +683,14 @@ import {
   FaUserCheck, FaUserTie, FaInfo, FaPaperPlane,
   FaComments, FaPhone, FaFileContract,
   FaClipboardCheck, FaCheck, FaBan, FaPlus, FaTrash,
-  FaHandHoldingUsd
+  FaHandHoldingUsd, FaCar, FaIdCard, FaTools, FaUserInjured,
+  FaChevronDown, FaChevronUp, FaMinus, FaFilePdf
 } from 'react-icons/fa';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // ==================== TYPES ====================
 
@@ -1235,8 +715,11 @@ type Expertise = {
   expert_email: string;
   date_designation: string;
   date_expertise: string | null;
+  date_visite_lieu: string | null;
   rapport: string | null;
   conclusion: string | null;
+  details_techniques: string | null;
+  recommandations: string | null;
   montant_evalue: number | null;
   statut: 'planifiee' | 'en_cours' | 'terminee' | 'annulee';
   documents: ExpertiseDocument[];
@@ -1288,6 +771,72 @@ type Indemnisation = {
   date_paiement: string | null;
   reference_paiement: string | null;
   commentaire: string | null;
+};
+
+type SonasDeclaration = {
+  id: number;
+  agence: string;
+  police: string;
+  valable_du: string;
+  valable_au: string;
+  claim_no: string;
+  garantie: string;
+  telephone: string;
+  date_heure_accident: string;
+  lieu_accident: string;
+  preneur_nom: string;
+  preneur_prenoms: string;
+  preneur_adresse: string;
+  conducteur_nom_prenom: string;
+  conducteur_age: number;
+  conducteur_a_service: boolean;
+  conducteur_titre_conduite: string;
+  permis_no: string;
+  permis_delivre_a: string;
+  permis_date: string;
+  vehicule_marque_type: string;
+  vehicule_plaque: string;
+  vehicule_chassis: string;
+  vehicule_moteur: string;
+  vehicule_puissance: string;
+  vehicule_annee: number;
+  vehicule_kilometrage: number;
+  vehicule_valeur: number;
+  garantie_rc: boolean;
+  garantie_dm: boolean;
+  garantie_inc: boolean;
+  garantie_vol: boolean;
+  description_accident: string;
+  degats_description: string;
+  degats_montant_evalue: number;
+  vehicule_immobilise: boolean;
+  lieu_garde_expertise: string;
+  adversaire_nom: string;
+  adversaire_post_nom: string;
+  adversaire_prenom: string;
+  adversaire_adresse: string;
+  adversaire_vehicule: string;
+  adversaire_plaque: string;
+  adversaire_assurance: string;
+  adversaire_telephone: string;
+  degats_materiels_description: string;
+  degats_materiels_evalues: number;
+  blesses_ou_morts: boolean;
+  victimes_infos: string;
+  victimes_soins_lieu: string;
+  hopital_nom_adresse: string;
+  medecin_nom: string;
+  medecin_telephone: string;
+  tiers_transportes: string;
+  temoins: string;
+  pv_par: string;
+  localite: string;
+  gendarmerie: string;
+  officier_gendarme: string;
+  prime_payee: boolean;
+  prime_date: string;
+  fait_a: string;
+  date_signature: string;
 };
 
 // ==================== CONSTANTES ====================
@@ -1386,6 +935,246 @@ function ProgressBar({ progress }: { progress: number }) {
   );
 }
 
+function CollapsibleSection({ title, icon, children, defaultOpen = false }: { title: string; icon?: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  return (
+    <div className="border rounded-lg overflow-hidden">
+      <button type="button" onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors">
+        <div className="flex items-center gap-2">{icon && <span className="text-blue-600">{icon}</span>}<h3 className="font-semibold text-sm text-gray-900">{title}</h3></div>
+        {isOpen ? <FaChevronUp className="h-4 w-4 text-gray-500" /> : <FaChevronDown className="h-4 w-4 text-gray-500" />}
+      </button>
+      {isOpen && <div className="p-4 bg-white">{children}</div>}
+    </div>
+  );
+}
+
+// ==================== FONCTIONS PDF ====================
+
+function generateRapportPDF(sinistre: Sinistre, expertise: Expertise, indemnisation: Indemnisation | null) {
+  const doc = new jsPDF('p', 'mm', 'a4');
+  let yPos = 20;
+
+  // En-tête
+  doc.setFontSize(20);
+  doc.setTextColor(41, 37, 140);
+  doc.text('SONAS', 105, yPos, { align: 'center' });
+  
+  doc.setFontSize(14);
+  doc.setTextColor(0, 0, 0);
+  yPos += 8;
+  doc.text('RAPPORT D\'EXPERTISE', 105, yPos, { align: 'center' });
+  
+  yPos += 6;
+  doc.setFontSize(10);
+  doc.text(`Date d'émission : ${formatDateShort(new Date().toISOString())}`, 105, yPos, { align: 'center' });
+
+  // Ligne de séparation
+  yPos += 5;
+  doc.setDrawColor(41, 37, 140);
+  doc.setLineWidth(0.5);
+  doc.line(15, yPos, 195, yPos);
+
+  // Informations du dossier
+  yPos += 10;
+  doc.setFontSize(13);
+  doc.setTextColor(41, 37, 140);
+  doc.text('INFORMATIONS DU DOSSIER', 15, yPos);
+
+  yPos += 7;
+  const infoDossier = [
+    ['N° Dossier', sinistre.numero_dossier],
+    ['Type de sinistre', TYPES_SINISTRE[sinistre.type_sinistre]?.label || sinistre.type_sinistre],
+    ['Date du sinistre', formatDateShort(sinistre.date_sinistre)],
+    ['Lieu', sinistre.lieu],
+    ['Statut', STATUTS[sinistre.statut]?.label || sinistre.statut],
+    ['Montant estimé initial', formatMontant(sinistre.montant_estime)],
+  ];
+
+  autoTable(doc, {
+    startY: yPos,
+    head: [['Champ', 'Valeur']],
+    body: infoDossier,
+    theme: 'grid',
+    headStyles: { fillColor: [41, 37, 140], textColor: [255, 255, 255], fontSize: 10 },
+    bodyStyles: { fontSize: 9 },
+    columnStyles: { 0: { cellWidth: 60 }, 1: { cellWidth: 120 } },
+    margin: { left: 15 },
+  });
+
+  // Informations de l'assuré
+  yPos = (doc as any).lastAutoTable.finalY + 8;
+  doc.setFontSize(13);
+  doc.setTextColor(41, 37, 140);
+  doc.text('INFORMATIONS DE L\'ASSURÉ', 15, yPos);
+
+  yPos += 7;
+  const infoAssure = [
+    ['Nom', sinistre.assure?.nom || 'N/A'],
+    ['Email', sinistre.assure?.email || 'N/A'],
+    ['Téléphone', sinistre.assure?.telephone || 'N/A'],
+    ['Police n°', sinistre.souscription?.police_numero || 'N/A'],
+  ];
+
+  autoTable(doc, {
+    startY: yPos,
+    head: [['Champ', 'Valeur']],
+    body: infoAssure,
+    theme: 'grid',
+    headStyles: { fillColor: [41, 37, 140], textColor: [255, 255, 255], fontSize: 10 },
+    bodyStyles: { fontSize: 9 },
+    columnStyles: { 0: { cellWidth: 60 }, 1: { cellWidth: 120 } },
+    margin: { left: 15 },
+  });
+
+  // Rapport d'expertise
+  yPos = (doc as any).lastAutoTable.finalY + 8;
+  doc.setFontSize(13);
+  doc.setTextColor(41, 37, 140);
+  doc.text('RAPPORT D\'EXPERTISE', 15, yPos);
+
+  yPos += 7;
+  doc.setFontSize(11);
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Expert : ${expertise.expert_nom}`, 15, yPos);
+  yPos += 5;
+  doc.setFontSize(10);
+  doc.text(`Date désignation : ${formatDateShort(expertise.date_designation)}`, 15, yPos);
+  
+  if (expertise.date_visite_lieu) {
+    yPos += 5;
+    doc.text(`Date visite : ${formatDateShort(expertise.date_visite_lieu)}`, 15, yPos);
+  }
+
+  if (expertise.rapport) {
+    yPos += 8;
+    doc.setFontSize(11);
+    doc.setTextColor(41, 37, 140);
+    doc.text('Constatations :', 15, yPos);
+    yPos += 5;
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    
+    const rapportLines = doc.splitTextToSize(expertise.rapport, 180);
+    doc.text(rapportLines, 15, yPos);
+    yPos += rapportLines.length * 4.5 + 3;
+  }
+
+  if (expertise.details_techniques) {
+    doc.setFontSize(11);
+    doc.setTextColor(41, 37, 140);
+    doc.text('Détails techniques :', 15, yPos);
+    yPos += 5;
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    
+    const detailsLines = doc.splitTextToSize(expertise.details_techniques, 180);
+    doc.text(detailsLines, 15, yPos);
+    yPos += detailsLines.length * 4.5 + 3;
+  }
+
+  if (expertise.montant_evalue) {
+    yPos += 3;
+    doc.setFontSize(11);
+    doc.setTextColor(41, 37, 140);
+    doc.text(`Montant évalué : ${formatMontant(expertise.montant_evalue)}`, 15, yPos);
+  }
+
+  if (expertise.conclusion) {
+    yPos += 8;
+    doc.setFontSize(11);
+    doc.setTextColor(41, 37, 140);
+    doc.text('Conclusion :', 15, yPos);
+    yPos += 5;
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    
+    const conclusionLines = doc.splitTextToSize(expertise.conclusion, 180);
+    doc.text(conclusionLines, 15, yPos);
+    yPos += conclusionLines.length * 4.5 + 3;
+  }
+
+  if (expertise.recommandations) {
+    yPos += 5;
+    doc.setFontSize(11);
+    doc.setTextColor(41, 37, 140);
+    doc.text('Recommandations :', 15, yPos);
+    yPos += 5;
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    
+    const recoLines = doc.splitTextToSize(expertise.recommandations, 180);
+    doc.text(recoLines, 15, yPos);
+    yPos += recoLines.length * 4.5 + 3;
+  }
+
+  // Nouvelle page si nécessaire
+  if (yPos > 240) {
+    doc.addPage();
+    yPos = 20;
+  }
+
+  // Indemnisation
+  if (indemnisation) {
+    yPos += 5;
+    doc.setDrawColor(200, 200, 200);
+    doc.line(15, yPos, 195, yPos);
+    yPos += 8;
+    doc.setFontSize(13);
+    doc.setTextColor(41, 37, 140);
+    doc.text('INDEMNISATION', 15, yPos);
+
+    yPos += 7;
+    const infoIndemnisation = [
+      ['Montant', formatMontant(indemnisation.montant_indemnisation)],
+      ['Mode de paiement', MODES_PAIEMENT[indemnisation.mode_paiement] || indemnisation.mode_paiement],
+      ['Statut', INDEMNISATION_STATUTS[indemnisation.statut]?.label || indemnisation.statut],
+      ['Date validation', indemnisation.date_validation ? formatDateShort(indemnisation.date_validation) : 'N/A'],
+      ['Date paiement', indemnisation.date_paiement ? formatDateShort(indemnisation.date_paiement) : 'N/A'],
+      ['Référence', indemnisation.reference_paiement || 'N/A'],
+    ];
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Champ', 'Valeur']],
+      body: infoIndemnisation,
+      theme: 'grid',
+      headStyles: { fillColor: [34, 197, 94], textColor: [255, 255, 255], fontSize: 10 },
+      bodyStyles: { fontSize: 9 },
+      columnStyles: { 0: { cellWidth: 60 }, 1: { cellWidth: 120 } },
+      margin: { left: 15 },
+    });
+  }
+
+  // Pied de page
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(128, 128, 128);
+    doc.text(`SONAS - Rapport d'expertise - ${sinistre.numero_dossier} - Page ${i}/${pageCount}`, 105, 290, { align: 'center' });
+  }
+
+  // Sauvegarde du PDF
+  doc.save(`Rapport_Expertise_${sinistre.numero_dossier}.pdf`);
+}
+
+// ==================== FONCTIONS UTILITAIRES ====================
+
+function formatMontant(m: number) {
+  if (!m) return '0 CDF';
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'CDF', maximumFractionDigits: 0 }).format(m);
+}
+
+function formatDate(d: string) {
+  try { return format(new Date(d), 'dd MMMM yyyy à HH:mm', { locale: fr }); }
+  catch { return d; }
+}
+
+function formatDateShort(d: string) {
+  try { return format(new Date(d), 'dd/MM/yyyy', { locale: fr }); }
+  catch { return d; }
+}
+
 // ==================== PAGE PRINCIPALE ====================
 
 type Props = { params: Promise<{ id: string }> };
@@ -1404,16 +1193,13 @@ export default function SinistreDetailPage({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [sonasDeclaration, setSonasDeclaration] = useState<SonasDeclaration | null>(null);
+  const [showAllSonasDetails, setShowAllSonasDetails] = useState(false);
 
   const [experts, setExperts] = useState<Expert[]>([]);
   const [showDesignateExpert, setShowDesignateExpert] = useState(false);
   const [selectedExpert, setSelectedExpert] = useState('');
   const [dateExpertise, setDateExpertise] = useState('');
-
-  const [showRapportModal, setShowRapportModal] = useState(false);
-  const [editingExpertise, setEditingExpertise] = useState<Expertise | null>(null);
-  const [rapportForm, setRapportForm] = useState({ rapport: '', conclusion: '', montant_evalue: 0 });
-  const [rapportFiles, setRapportFiles] = useState<File[]>([]);
 
   const [newMessage, setNewMessage] = useState('');
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -1432,12 +1218,8 @@ export default function SinistreDetailPage({ params }: Props) {
   }, [user, id]);
 
   const chargerTout = async () => {
-    try {
-      setLoading(true);
-      await Promise.all([chargerSinistre(), chargerExpertises(), chargerCommunications(), chargerIndemnisation()]);
-    } finally {
-      setLoading(false);
-    }
+    try { setLoading(true); await Promise.all([chargerSinistre(), chargerExpertises(), chargerCommunications(), chargerIndemnisation()]); }
+    finally { setLoading(false); }
   };
 
   const chargerSinistre = async () => {
@@ -1449,6 +1231,24 @@ export default function SinistreDetailPage({ params }: Props) {
     if (data.souscription_id) {
       const { data: subData } = await supabase.from('souscriptions').select('police_numero').eq('id', data.souscription_id).single();
       souscription = subData;
+
+      const { data: souscriptionData } = await supabase
+        .from('souscriptions')
+        .select('type_assurance:types_assurance!souscriptions_type_assurance_id_fkey(code)')
+        .eq('id', data.souscription_id)
+        .single();
+      
+      const typeAssuranceCode = (souscriptionData?.type_assurance as any)?.code;
+      
+      if (typeAssuranceCode === 'automobile') {
+        const { data: sonasData } = await supabase
+          .from('sonas_declarations_accident')
+          .select('*')
+          .eq('sinistre_id', id)
+          .single();
+        
+        if (sonasData) setSonasDeclaration(sonasData as SonasDeclaration);
+      }
     }
 
     setSinistre({ ...data, assure: assureData || { nom: 'Inconnu', email: '' }, souscription });
@@ -1467,13 +1267,7 @@ export default function SinistreDetailPage({ params }: Props) {
       const { data: expertsData } = await supabase.from('users').select('id, nom, email').in('id', expertIds);
       const expertMap = new Map();
       if (expertsData) expertsData.forEach(e => expertMap.set(e.id, e));
-
-      setExpertises(data.map(e => ({
-        ...e,
-        expert_nom: expertMap.get(e.expert_id)?.nom || 'Inconnu',
-        expert_email: expertMap.get(e.expert_id)?.email || '',
-        documents: [],
-      })));
+      setExpertises(data.map(e => ({ ...e, expert_nom: expertMap.get(e.expert_id)?.nom || 'Inconnu', expert_email: expertMap.get(e.expert_id)?.email || '', documents: [] })));
     }
   };
 
@@ -1485,9 +1279,7 @@ export default function SinistreDetailPage({ params }: Props) {
       const userMap = new Map();
       if (users) users.forEach(u => userMap.set(u.id, u));
       setCommunications(data.map(c => ({ ...c, expediteur_nom: userMap.get(c.expediteur_id)?.nom || 'Système', expediteur_role: userMap.get(c.expediteur_id)?.role || 'system' })));
-    } else {
-      setCommunications([]);
-    }
+    } else setCommunications([]);
   };
 
   const chargerExperts = async () => {
@@ -1503,10 +1295,7 @@ export default function SinistreDetailPage({ params }: Props) {
     }
   };
 
-  // ✅ Vérifier si l'indemnisation est payée
   const isIndemnisationPayee = indemnisation?.statut === 'payee';
-  
-  // ✅ Le statut effectif : si payé, on considère comme clôturé
   const statutEffectif = isIndemnisationPayee ? 'cloture' : (sinistre?.statut || 'en_attente');
 
   // ============ ACTIONS ============
@@ -1517,10 +1306,7 @@ export default function SinistreDetailPage({ params }: Props) {
       await supabase.from('expertises').insert({ sinistre_id: id, expert_id: selectedExpert, date_designation: new Date().toISOString(), date_expertise: dateExpertise, statut: 'planifiee' });
       if (sinistre?.statut === 'en_cours') await supabase.from('sinistres').update({ statut: 'expertise', updated_by: user?.id }).eq('id', id);
       await ajouterCommunication('notification', `Expert désigné. Date prévue : ${formatDate(dateExpertise)}`);
-      setSuccess('Expert désigné');
-      setShowDesignateExpert(false);
-      await chargerTout();
-      setTimeout(() => setSuccess(null), 3000);
+      setSuccess('Expert désigné'); setShowDesignateExpert(false); await chargerTout(); setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) { setError(err.message); }
   };
 
@@ -1528,8 +1314,7 @@ export default function SinistreDetailPage({ params }: Props) {
     if (!newMessage.trim()) return;
     try {
       await supabase.from('sinistre_communications').insert({ sinistre_id: id, type: 'message', contenu: newMessage, expediteur_id: user?.id });
-      setNewMessage('');
-      await chargerCommunications();
+      setNewMessage(''); await chargerCommunications();
     } catch (err: any) { setError(err.message); }
   };
 
@@ -1540,10 +1325,7 @@ export default function SinistreDetailPage({ params }: Props) {
       if (newStatus === 'cloture') updateData.date_cloture = new Date().toISOString();
       await supabase.from('sinistres').update(updateData).eq('id', id);
       await ajouterCommunication('notification', `Statut mis à jour : ${STATUTS[newStatus]?.label}`);
-      setSuccess('Statut mis à jour');
-      setShowStatusModal(false);
-      await chargerSinistre();
-      setTimeout(() => setSuccess(null), 3000);
+      setSuccess('Statut mis à jour'); setShowStatusModal(false); await chargerSinistre(); setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) { setError(err.message); }
   };
 
@@ -1555,13 +1337,9 @@ export default function SinistreDetailPage({ params }: Props) {
         const { data } = supabase.storage.from('sinistres').getPublicUrl(fileName);
         await supabase.from('sinistre_documents').insert({ sinistre_id: id, nom_fichier: file.name, url_fichier: data.publicUrl, type_document: 'autre_document', taille_fichier: file.size, type_mime: file.type, uploaded_by: user?.id });
       }
-      await chargerSinistre();
-      setSuccess('Documents téléchargés');
-      setTimeout(() => setSuccess(null), 3000);
+      await chargerSinistre(); setSuccess('Documents téléchargés'); setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) { setError(err.message); }
   };
-
-  // ============ ACTIONS INDEMNISATION ============
 
   const handleInitierIndemnisation = () => {
     const expertiseTerminee = expertises.find(e => e.statut === 'terminee');
@@ -1580,10 +1358,7 @@ export default function SinistreDetailPage({ params }: Props) {
         if (sinistre?.statut === 'expertise') await supabase.from('sinistres').update({ statut: 'en_indemnisation', updated_by: user?.id }).eq('id', id);
       }
       await ajouterCommunication('notification', `Indemnisation ${indemnisation?.id ? 'mise à jour' : 'initiée'} : ${formatMontant(indemnisationForm.montant_indemnisation)}`);
-      setSuccess('Indemnisation enregistrée');
-      setShowIndemnisationModal(false);
-      await chargerTout();
-      setTimeout(() => setSuccess(null), 2000);
+      setSuccess('Indemnisation enregistrée'); setShowIndemnisationModal(false); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
     } catch (err: any) { setError(err.message); }
     finally { setSaving(false); }
   };
@@ -1592,9 +1367,7 @@ export default function SinistreDetailPage({ params }: Props) {
     try {
       await supabase.from('indemnisations').update({ statut: 'validee', date_validation: new Date().toISOString() }).eq('id', indemnisation?.id);
       await ajouterCommunication('notification', `Indemnisation validée : ${formatMontant(indemnisation!.montant_indemnisation)}`);
-      setSuccess('Indemnisation validée');
-      await chargerTout();
-      setTimeout(() => setSuccess(null), 2000);
+      setSuccess('Indemnisation validée'); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
     } catch (err: any) { setError(err.message); }
   };
 
@@ -1604,9 +1377,7 @@ export default function SinistreDetailPage({ params }: Props) {
       await supabase.from('indemnisations').update({ statut: 'payee', date_paiement: new Date().toISOString(), reference_paiement: reference || null }).eq('id', indemnisation?.id);
       await supabase.from('sinistres').update({ montant_indemnisation: indemnisation!.montant_indemnisation, updated_by: user?.id }).eq('id', id);
       await ajouterCommunication('notification', `Paiement effectué : ${formatMontant(indemnisation!.montant_indemnisation)}${reference ? ` (Réf: ${reference})` : ''}`);
-      setSuccess('Paiement enregistré');
-      await chargerTout();
-      setTimeout(() => setSuccess(null), 2000);
+      setSuccess('Paiement enregistré'); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
     } catch (err: any) { setError(err.message); }
   };
 
@@ -1615,37 +1386,34 @@ export default function SinistreDetailPage({ params }: Props) {
     try {
       await supabase.from('indemnisations').update({ statut: 'annulee' }).eq('id', indemnisation?.id);
       await ajouterCommunication('notification', 'Indemnisation annulée');
-      setSuccess('Indemnisation annulée');
-      await chargerTout();
-      setTimeout(() => setSuccess(null), 2000);
+      setSuccess('Indemnisation annulée'); await chargerTout(); setTimeout(() => setSuccess(null), 2000);
     } catch (err: any) { setError(err.message); }
   };
 
-  // ============ HELPERS ============
+  const handleDownloadRapportPDF = (expertise: Expertise) => {
+    if (!sinistre) return;
+    generateRapportPDF(sinistre, expertise, indemnisation);
+    setSuccess('📄 Rapport PDF téléchargé avec succès !');
+    setTimeout(() => setSuccess(null), 2000);
+  };
 
   const ajouterCommunication = async (type: string, contenu: string) => {
     await supabase.from('sinistre_communications').insert({ sinistre_id: id, type, contenu, expediteur_id: user?.id });
   };
 
-  const formatDate = (d: string) => { try { return format(new Date(d), 'dd MMMM yyyy à HH:mm', { locale: fr }); } catch { return d; } };
-  const formatDateShort = (d: string) => { try { return format(new Date(d), 'dd/MM/yyyy', { locale: fr }); } catch { return d; } };
-  const formatMontant = (m: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'CDF', maximumFractionDigits: 0 }).format(m);
-
   if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><FaSpinner className="h-12 w-12 text-blue-500 animate-spin" /></div>;
   if (!sinistre) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-center"><FaExclamationTriangle className="mx-auto h-12 w-12 text-yellow-500" /><p className="mt-4">Dossier non trouvé</p><Link href="/sinistres" className="mt-4 inline-block text-blue-600">Retour aux sinistres</Link></div></div>;
 
   const statutInfo = STATUTS[statutEffectif] || STATUTS.en_attente;
-  const StatutIcon = statutInfo.icon;
   const isAgent = ['admin', 'agent'].includes(user?.role || '');
   const isExpert = user?.role === 'expert';
-  const monExpertise = isExpert ? expertises.find(e => e.expert_id === user?.id) : null;
   const expertiseTerminee = expertises.find(e => e.statut === 'terminee');
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <Link href="/sinistres" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-3"><FaArrowLeft className="mr-2 h-4 w-4" />Retour aux sinistres</Link>
+          <Link href="/agent/sinistres" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-3"><FaArrowLeft className="mr-2 h-4 w-4" />Retour aux sinistres</Link>
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h1 className="text-2xl font-semibold">Dossier {sinistre.numero_dossier}</h1>
@@ -1679,53 +1447,92 @@ export default function SinistreDetailPage({ params }: Props) {
 
         {/* Progression */}
         <div className="bg-white rounded-lg border p-6 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold">Progression</h2>
-            <StatutBadge statut={statutEffectif} />
-          </div>
+          <div className="flex items-center justify-between mb-3"><h2 className="text-lg font-semibold">Progression</h2><StatutBadge statut={statutEffectif} /></div>
           <ProgressBar progress={statutInfo.progress} />
           <div className="flex justify-between mt-2 text-xs text-gray-500">
             {Object.entries(STATUTS).filter(([k]) => !['refuse'].includes(k)).map(([key, val]) => (
               <span key={key} className={statutEffectif === key ? 'font-semibold text-gray-900' : ''}>{val.label}</span>
             ))}
           </div>
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-800"><FaInfo className="inline mr-1" />{statutInfo.description}</p>
-          </div>
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg"><p className="text-sm text-blue-800"><FaInfo className="inline mr-1" />{statutInfo.description}</p></div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            {/* Infos */}
-            <div className="bg-white rounded-lg border p-6">
-              <h2 className="text-lg font-semibold mb-4">Informations du sinistre</h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div><p className="text-gray-500">Type</p><p>{TYPES_SINISTRE[sinistre.type_sinistre]?.icon} {TYPES_SINISTRE[sinistre.type_sinistre]?.label || sinistre.type_sinistre}</p></div>
-                <div><p className="text-gray-500">Date</p><p>{formatDate(sinistre.date_sinistre)}</p></div>
-                <div><p className="text-gray-500">Lieu</p><p>{sinistre.lieu}</p></div>
-                <div><p className="text-gray-500">Montant estimé</p><p className="font-medium">{formatMontant(sinistre.montant_estime)}</p></div>
-                {sinistre.montant_indemnisation > 0 && <div><p className="text-gray-500">Indemnisé</p><p className="font-medium text-green-600">{formatMontant(sinistre.montant_indemnisation)}</p></div>}
-                {sinistre.souscription && <div><p className="text-gray-500">Police</p><p>{sinistre.souscription.police_numero || 'N/A'}</p></div>}
+            {/* Détails - SONAS ou Normal */}
+            {sonasDeclaration ? (
+              <div className="bg-white rounded-lg border-2 border-blue-200 overflow-hidden">
+                <div className="bg-blue-600 text-white px-6 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3"><FaCar className="h-5 w-5" /><h2 className="text-lg font-semibold">Déclaration d'Accident Automobile - SONAS</h2></div>
+                  <button onClick={() => setShowAllSonasDetails(!showAllSonasDetails)} className="flex items-center gap-2 px-4 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm transition-colors">
+                    {showAllSonasDetails ? <><FaMinus className="h-3 w-3" /> Moins de détails</> : <><FaPlus className="h-3 w-3" /> Plus de détails</>}
+                  </button>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm bg-blue-50 p-4 rounded-lg">
+                    <div><p className="text-gray-500">N° Dossier</p><p className="font-semibold text-blue-700">{sonasDeclaration.claim_no}</p></div>
+                    <div><p className="text-gray-500">Date accident</p><p className="font-medium">{formatDate(sonasDeclaration.date_heure_accident)}</p></div>
+                    <div><p className="text-gray-500">Lieu</p><p className="font-medium truncate">{sonasDeclaration.lieu_accident}</p></div>
+                    <div><p className="text-gray-500">Véhicule</p><p className="font-medium">{sonasDeclaration.vehicule_marque_type || '-'} - {sonasDeclaration.vehicule_plaque || '-'}</p></div>
+                  </div>
+
+                  {showAllSonasDetails && (
+                    <div className="space-y-4 pt-4 border-t">
+                      <CollapsibleSection title="Informations générales" icon={<FaFileAlt className="h-4 w-4" />} defaultOpen={true}>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div><p className="text-gray-500">Agence</p><p className="font-medium">{sonasDeclaration.agence}</p></div>
+                          <div><p className="text-gray-500">Police</p><p className="font-medium">{sonasDeclaration.police || '-'}</p></div>
+                          <div><p className="text-gray-500">Garantie</p><p className="font-medium">{sonasDeclaration.garantie || '-'}</p></div>
+                          <div><p className="text-gray-500">Téléphone</p><p className="font-medium">{sonasDeclaration.telephone || '-'}</p></div>
+                          {sonasDeclaration.valable_du && <div><p className="text-gray-500">Valable du</p><p className="font-medium">{formatDateShort(sonasDeclaration.valable_du)}</p></div>}
+                          {sonasDeclaration.valable_au && <div><p className="text-gray-500">Au</p><p className="font-medium">{formatDateShort(sonasDeclaration.valable_au)}</p></div>}
+                        </div>
+                      </CollapsibleSection>
+                      <CollapsibleSection title="2. Preneur d'assurance" icon={<FaUser className="h-4 w-4" />}>
+                        <div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Nom</p><p className="font-medium">{sonasDeclaration.preneur_nom || '-'}</p></div><div><p className="text-gray-500">Prénoms</p><p className="font-medium">{sonasDeclaration.preneur_prenoms || '-'}</p></div><div className="col-span-2"><p className="text-gray-500">Adresse</p><p className="font-medium">{sonasDeclaration.preneur_adresse || '-'}</p></div></div>
+                      </CollapsibleSection>
+                      <CollapsibleSection title="3. Conducteur" icon={<FaIdCard className="h-4 w-4" />}>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm"><div><p className="text-gray-500">Nom et prénom</p><p className="font-medium">{sonasDeclaration.conducteur_nom_prenom || '-'}</p></div><div><p className="text-gray-500">Âge</p><p className="font-medium">{sonasDeclaration.conducteur_age || '-'}</p></div><div><p className="text-gray-500">À votre service ?</p><p className="font-medium">{sonasDeclaration.conducteur_a_service === true ? 'Oui' : sonasDeclaration.conducteur_a_service === false ? 'Non' : '-'}</p></div><div className="col-span-2"><p className="text-gray-500">Titre de conduite</p><p className="font-medium">{sonasDeclaration.conducteur_titre_conduite || '-'}</p></div><div><p className="text-gray-500">Permis n°</p><p className="font-medium">{sonasDeclaration.permis_no || '-'}</p></div><div><p className="text-gray-500">Délivré à</p><p className="font-medium">{sonasDeclaration.permis_delivre_a || '-'}</p></div><div><p className="text-gray-500">Date permis</p><p className="font-medium">{sonasDeclaration.permis_date ? formatDateShort(sonasDeclaration.permis_date) : '-'}</p></div></div>
+                      </CollapsibleSection>
+                      <CollapsibleSection title="4. Véhicule" icon={<FaCar className="h-4 w-4" />}>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"><div><p className="text-gray-500">Marque et type</p><p className="font-medium">{sonasDeclaration.vehicule_marque_type || '-'}</p></div><div><p className="text-gray-500">Plaque</p><p className="font-medium">{sonasDeclaration.vehicule_plaque || '-'}</p></div><div><p className="text-gray-500">Châssis</p><p className="font-medium">{sonasDeclaration.vehicule_chassis || '-'}</p></div><div><p className="text-gray-500">Moteur</p><p className="font-medium">{sonasDeclaration.vehicule_moteur || '-'}</p></div><div><p className="text-gray-500">Puissance</p><p className="font-medium">{sonasDeclaration.vehicule_puissance || '-'}</p></div><div><p className="text-gray-500">Année</p><p className="font-medium">{sonasDeclaration.vehicule_annee || '-'}</p></div><div><p className="text-gray-500">Kilométrage</p><p className="font-medium">{sonasDeclaration.vehicule_kilometrage ? `${sonasDeclaration.vehicule_kilometrage} km` : '-'}</p></div><div><p className="text-gray-500">Valeur</p><p className="font-medium">{sonasDeclaration.vehicule_valeur ? formatMontant(sonasDeclaration.vehicule_valeur) : '-'}</p></div></div>
+                        <div className="mt-3 pt-3 border-t"><p className="text-xs text-gray-500 mb-2">Garanties :</p><div className="flex gap-4"><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_rc ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>R.C.</span><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_dm ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>D.M.</span><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_inc ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>Inc.</span><span className={`px-2 py-1 rounded text-xs ${sonasDeclaration.garantie_vol ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'}`}>Vol</span></div></div>
+                      </CollapsibleSection>
+                      <CollapsibleSection title="5. Description de l'accident" icon={<FaClipboardList className="h-4 w-4" />}><p className="text-sm whitespace-pre-wrap">{sonasDeclaration.description_accident || 'Aucune description'}</p></CollapsibleSection>
+                      <CollapsibleSection title="6. Dégâts de votre véhicule" icon={<FaTools className="h-4 w-4" />}><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Description</p><p className="font-medium whitespace-pre-wrap">{sonasDeclaration.degats_description || '-'}</p></div><div><p className="text-gray-500">Montant évalué</p><p className="font-medium">{sonasDeclaration.degats_montant_evalue ? formatMontant(sonasDeclaration.degats_montant_evalue) : '-'}</p></div></div></CollapsibleSection>
+                      <CollapsibleSection title="7. Garage"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Véhicule immobilisé ?</p><p className="font-medium">{sonasDeclaration.vehicule_immobilise === true ? 'Oui' : sonasDeclaration.vehicule_immobilise === false ? 'Non' : '-'}</p></div><div><p className="text-gray-500">Lieu de garde</p><p className="font-medium">{sonasDeclaration.lieu_garde_expertise || '-'}</p></div></div></CollapsibleSection>
+                      <CollapsibleSection title="8. Adversaire"><div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"><div><p className="text-gray-500">Nom</p><p className="font-medium">{sonasDeclaration.adversaire_nom || '-'}</p></div><div><p className="text-gray-500">Post-nom</p><p className="font-medium">{sonasDeclaration.adversaire_post_nom || '-'}</p></div><div><p className="text-gray-500">Prénom</p><p className="font-medium">{sonasDeclaration.adversaire_prenom || '-'}</p></div><div className="col-span-4"><p className="text-gray-500">Adresse</p><p className="font-medium">{sonasDeclaration.adversaire_adresse || '-'}</p></div><div><p className="text-gray-500">Véhicule</p><p className="font-medium">{sonasDeclaration.adversaire_vehicule || '-'}</p></div><div><p className="text-gray-500">Plaque</p><p className="font-medium">{sonasDeclaration.adversaire_plaque || '-'}</p></div><div><p className="text-gray-500">Assurance</p><p className="font-medium">{sonasDeclaration.adversaire_assurance || '-'}</p></div><div><p className="text-gray-500">Téléphone</p><p className="font-medium">{sonasDeclaration.adversaire_telephone || '-'}</p></div></div></CollapsibleSection>
+                      <CollapsibleSection title="9. Dégâts matériels (tiers)"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Description</p><p className="font-medium whitespace-pre-wrap">{sonasDeclaration.degats_materiels_description || '-'}</p></div><div><p className="text-gray-500">Dégâts évalués à</p><p className="font-medium">{sonasDeclaration.degats_materiels_evalues ? formatMontant(sonasDeclaration.degats_materiels_evalues) : '-'}</p></div></div></CollapsibleSection>
+                      <CollapsibleSection title="10. Blessés ou morts" icon={<FaUserInjured className="h-4 w-4" />}><div className="space-y-3 text-sm"><div><p className="text-gray-500">Blessés ou morts ?</p><p className="font-medium">{sonasDeclaration.blesses_ou_morts ? 'Oui' : 'Non'}</p></div>{sonasDeclaration.victimes_infos && <div><p className="text-gray-500">Victimes</p><p className="font-medium whitespace-pre-wrap">{sonasDeclaration.victimes_infos}</p></div>}{sonasDeclaration.victimes_soins_lieu && <div><p className="text-gray-500">Lieu des soins</p><p className="font-medium">{sonasDeclaration.victimes_soins_lieu}</p></div>}<div className="grid grid-cols-2 gap-4">{sonasDeclaration.hopital_nom_adresse && <div><p className="text-gray-500">Hôpital</p><p className="font-medium">{sonasDeclaration.hopital_nom_adresse}</p></div>}{sonasDeclaration.medecin_nom && <div><p className="text-gray-500">Médecin</p><p className="font-medium">{sonasDeclaration.medecin_nom}</p></div>}</div>{sonasDeclaration.medecin_telephone && <div><p className="text-gray-500">Tél médecin</p><p className="font-medium">{sonasDeclaration.medecin_telephone}</p></div>}</div></CollapsibleSection>
+                      {sonasDeclaration.tiers_transportes && <CollapsibleSection title="11. Tiers transportés"><p className="text-sm whitespace-pre-wrap">{sonasDeclaration.tiers_transportes}</p></CollapsibleSection>}
+                      {sonasDeclaration.temoins && <CollapsibleSection title="12. Témoins"><p className="text-sm whitespace-pre-wrap">{sonasDeclaration.temoins}</p></CollapsibleSection>}
+                      <CollapsibleSection title="13. Autorités"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">PV par</p><p className="font-medium">{sonasDeclaration.pv_par || '-'}</p></div><div><p className="text-gray-500">Localité</p><p className="font-medium">{sonasDeclaration.localite || '-'}</p></div><div><p className="text-gray-500">Gendarmerie</p><p className="font-medium">{sonasDeclaration.gendarmerie || '-'}</p></div><div><p className="text-gray-500">Officier</p><p className="font-medium">{sonasDeclaration.officier_gendarme || '-'}</p></div></div></CollapsibleSection>
+                      <CollapsibleSection title="14. Prime d'assurance"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Dernière prime payée ?</p><p className="font-medium">{sonasDeclaration.prime_payee === true ? 'Oui' : sonasDeclaration.prime_payee === false ? 'Non' : '-'}</p></div>{sonasDeclaration.prime_date && <div><p className="text-gray-500">Date</p><p className="font-medium">{formatDateShort(sonasDeclaration.prime_date)}</p></div>}</div></CollapsibleSection>
+                      <CollapsibleSection title="Signature"><div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-gray-500">Fait à</p><p className="font-medium">{sonasDeclaration.fait_a || '-'}</p></div><div><p className="text-gray-500">Date</p><p className="font-medium">{sonasDeclaration.date_signature ? formatDateShort(sonasDeclaration.date_signature) : '-'}</p></div></div></CollapsibleSection>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="mt-4 pt-4 border-t"><p className="text-sm text-gray-500 mb-1">Description</p><p className="text-sm whitespace-pre-wrap">{sinistre.description}</p></div>
-            </div>
+            ) : (
+              <div className="bg-white rounded-lg border p-6">
+                <h2 className="text-lg font-semibold mb-4">Informations du sinistre</h2>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div><p className="text-gray-500">Type</p><p>{TYPES_SINISTRE[sinistre.type_sinistre]?.icon} {TYPES_SINISTRE[sinistre.type_sinistre]?.label || sinistre.type_sinistre}</p></div>
+                  <div><p className="text-gray-500">Date</p><p>{formatDate(sinistre.date_sinistre)}</p></div>
+                  <div><p className="text-gray-500">Lieu</p><p>{sinistre.lieu}</p></div>
+                  <div><p className="text-gray-500">Montant estimé</p><p className="font-medium">{formatMontant(sinistre.montant_estime)}</p></div>
+                  {sinistre.montant_indemnisation > 0 && <div><p className="text-gray-500">Indemnisé</p><p className="font-medium text-green-600">{formatMontant(sinistre.montant_indemnisation)}</p></div>}
+                  {sinistre.souscription && <div><p className="text-gray-500">Police</p><p>{sinistre.souscription.police_numero || 'N/A'}</p></div>}
+                </div>
+                <div className="mt-4 pt-4 border-t"><p className="text-sm text-gray-500 mb-1">Description</p><p className="text-sm whitespace-pre-wrap">{sinistre.description}</p></div>
+              </div>
+            )}
 
             {/* Indemnisation */}
             {indemnisation && (
               <div className="bg-white rounded-lg border border-green-200 p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold"><FaHandHoldingUsd className="inline mr-2 text-green-600" />Indemnisation</h2>
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${INDEMNISATION_STATUTS[indemnisation.statut]?.bgColor} ${INDEMNISATION_STATUTS[indemnisation.statut]?.color}`}>
-                    {INDEMNISATION_STATUTS[indemnisation.statut]?.label}
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-                  <div><p className="text-gray-500">Montant</p><p className="text-xl font-bold text-green-600">{formatMontant(indemnisation.montant_indemnisation)}</p></div>
-                  <div><p className="text-gray-500">Mode</p><p className="font-medium">{MODES_PAIEMENT[indemnisation.mode_paiement] || indemnisation.mode_paiement}</p></div>
-                  {indemnisation.date_validation && <div><p className="text-gray-500">Date validation</p><p>{formatDateShort(indemnisation.date_validation)}</p></div>}
-                  {indemnisation.date_paiement && <div><p className="text-gray-500">Date paiement</p><p>{formatDateShort(indemnisation.date_paiement)}</p></div>}
-                  {indemnisation.reference_paiement && <div><p className="text-gray-500">Référence</p><p className="font-mono">{indemnisation.reference_paiement}</p></div>}
-                </div>
+                <div className="flex items-center justify-between mb-4"><h2 className="text-lg font-semibold"><FaHandHoldingUsd className="inline mr-2 text-green-600" />Indemnisation</h2><span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${INDEMNISATION_STATUTS[indemnisation.statut]?.bgColor} ${INDEMNISATION_STATUTS[indemnisation.statut]?.color}`}>{INDEMNISATION_STATUTS[indemnisation.statut]?.label}</span></div>
+                <div className="grid grid-cols-2 gap-4 text-sm mb-4"><div><p className="text-gray-500">Montant</p><p className="text-xl font-bold text-green-600">{formatMontant(indemnisation.montant_indemnisation)}</p></div><div><p className="text-gray-500">Mode</p><p className="font-medium">{MODES_PAIEMENT[indemnisation.mode_paiement] || indemnisation.mode_paiement}</p></div>{indemnisation.date_validation && <div><p className="text-gray-500">Date validation</p><p>{formatDateShort(indemnisation.date_validation)}</p></div>}{indemnisation.date_paiement && <div><p className="text-gray-500">Date paiement</p><p>{formatDateShort(indemnisation.date_paiement)}</p></div>}{indemnisation.reference_paiement && <div><p className="text-gray-500">Référence</p><p className="font-mono">{indemnisation.reference_paiement}</p></div>}</div>
                 {indemnisation.commentaire && <div className="bg-gray-50 rounded-lg p-3 mb-4"><p className="text-sm text-gray-600">{indemnisation.commentaire}</p></div>}
                 {isAgent && (
                   <div className="flex flex-wrap gap-2 pt-2 border-t">
@@ -1747,18 +1554,82 @@ export default function SinistreDetailPage({ params }: Props) {
                     <div key={expertise.id} className="border rounded-lg p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center"><FaUserCheck className="h-5 w-5 text-purple-600" /></div>
-                          <div className="ml-3"><p className="text-sm font-medium">{expertise.expert_nom}</p><p className="text-xs text-gray-500">{expertise.expert_email}</p></div>
+                          <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                            <FaUserCheck className="h-5 w-5 text-purple-600" />
+                          </div>
+                          <div className="ml-3">
+                            <p className="text-sm font-medium">{expertise.expert_nom}</p>
+                            <p className="text-xs text-gray-500">{expertise.expert_email}</p>
+                          </div>
                         </div>
-                        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${expertise.statut === 'terminee' ? 'bg-green-100 text-green-800' : expertise.statut === 'en_cours' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                          {expertise.statut === 'terminee' ? '✓ Terminée' : expertise.statut === 'en_cours' ? '⟳ En cours' : '⏳ Planifiée'}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            expertise.statut === 'terminee' ? 'bg-green-100 text-green-800' : 
+                            expertise.statut === 'en_cours' ? 'bg-blue-100 text-blue-800' : 
+                            'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {expertise.statut === 'terminee' ? '✓ Terminée' : 
+                             expertise.statut === 'en_cours' ? '⟳ En cours' : '⏳ Planifiée'}
+                          </span>
+                          
+                          {expertise.statut === 'terminee' && (
+                            <button
+                              onClick={() => handleDownloadRapportPDF(expertise)}
+                              className="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition-colors"
+                              title="Télécharger le rapport en PDF"
+                            >
+                              <FaFilePdf className="mr-1 h-3 w-3" />
+                              PDF
+                            </button>
+                          )}
+                        </div>
                       </div>
+                      
                       {expertise.rapport && (
-                        <div className="mt-3 pt-3 border-t">
-                          <p className="text-sm font-medium mb-1">Rapport</p>
-                          <p className="text-sm text-gray-600 whitespace-pre-wrap">{expertise.rapport}</p>
-                          {expertise.montant_evalue != null && expertise.montant_evalue > 0 && <p className="text-sm font-semibold text-purple-600 mt-1">Montant évalué : {formatMontant(expertise.montant_evalue)}</p>}
+                        <div className="mt-3 pt-3 border-t space-y-3">
+                          <div className="bg-gray-50 rounded-lg p-3">
+                            <p className="text-sm font-medium mb-2">📝 Constatations</p>
+                            <p className="text-sm text-gray-600 whitespace-pre-wrap">{expertise.rapport}</p>
+                          </div>
+
+                          {expertise.details_techniques && (
+                            <div className="bg-blue-50 rounded-lg p-3">
+                              <p className="text-sm font-medium mb-2">🔧 Détails techniques</p>
+                              <p className="text-sm text-gray-600 whitespace-pre-wrap">{expertise.details_techniques}</p>
+                            </div>
+                          )}
+
+                          {expertise.montant_evalue != null && expertise.montant_evalue > 0 && (
+                            <div className="bg-green-50 rounded-lg p-3">
+                              <p className="text-sm font-medium text-green-800">💰 Montant évalué</p>
+                              <p className="text-lg font-bold text-green-700">{formatMontant(expertise.montant_evalue)}</p>
+                            </div>
+                          )}
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {expertise.conclusion && (
+                              <div className="bg-purple-50 rounded-lg p-3">
+                                <p className="text-sm font-medium mb-1">✅ Conclusion</p>
+                                <p className="text-sm text-gray-600">{expertise.conclusion}</p>
+                              </div>
+                            )}
+                            {expertise.recommandations && (
+                              <div className="bg-orange-50 rounded-lg p-3">
+                                <p className="text-sm font-medium mb-1">💡 Recommandations</p>
+                                <p className="text-sm text-gray-600">{expertise.recommandations}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex justify-end pt-2 border-t">
+                            <button
+                              onClick={() => handleDownloadRapportPDF(expertise)}
+                              className="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors"
+                            >
+                              <FaDownload className="mr-2 h-4 w-4" />
+                              Télécharger le rapport complet (PDF)
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -1771,14 +1642,27 @@ export default function SinistreDetailPage({ params }: Props) {
             <div className="bg-white rounded-lg border p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold">Documents ({documents.length})</h2>
-                <label className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 cursor-pointer"><FaUpload className="mr-2 h-4 w-4" />Ajouter<input type="file" multiple className="hidden" onChange={(e) => e.target.files && handleUploadDocument(e.target.files)} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" /></label>
+                <label className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 cursor-pointer">
+                  <FaUpload className="mr-2 h-4 w-4" />Ajouter
+                  <input type="file" multiple className="hidden" onChange={(e) => e.target.files && handleUploadDocument(e.target.files)} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                </label>
               </div>
-              {documents.length === 0 ? <p className="text-sm text-gray-500 text-center py-8">Aucun document</p> : (
+              {documents.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">Aucun document</p>
+              ) : (
                 <div className="space-y-2">
                   {documents.map((doc: any) => (
                     <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center min-w-0"><FaFileAlt className="h-5 w-5 text-blue-500 mr-3" /><div className="min-w-0"><p className="text-sm font-medium truncate">{doc.nom_fichier}</p><p className="text-xs text-gray-500">{doc.created_at ? formatDateShort(doc.created_at) : ''}</p></div></div>
-                      <a href={doc.url_fichier} target="_blank" rel="noopener noreferrer" className="ml-3 text-blue-600"><FaDownload className="h-5 w-5" /></a>
+                      <div className="flex items-center min-w-0">
+                        <FaFileAlt className="h-5 w-5 text-blue-500 mr-3" />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">{doc.nom_fichier}</p>
+                          <p className="text-xs text-gray-500">{doc.created_at ? formatDateShort(doc.created_at) : ''}</p>
+                        </div>
+                      </div>
+                      <a href={doc.url_fichier} target="_blank" rel="noopener noreferrer" className="ml-3 text-blue-600">
+                        <FaDownload className="h-5 w-5" />
+                      </a>
                     </div>
                   ))}
                 </div>
@@ -1792,35 +1676,68 @@ export default function SinistreDetailPage({ params }: Props) {
               <h2 className="text-lg font-semibold mb-4"><FaUser className="inline mr-2 text-gray-400" />Assuré</h2>
               <div className="flex items-center mb-3">
                 <AssureAvatar assure={sinistre.assure || { nom: '', email: '' }} size="lg" />
-                <div className="ml-3"><p className="text-sm font-medium">{sinistre.assure?.nom || 'Inconnu'}</p><p className="text-xs text-gray-500">{sinistre.assure?.email}</p></div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium">{sinistre.assure?.nom || 'Inconnu'}</p>
+                  <p className="text-xs text-gray-500">{sinistre.assure?.email}</p>
+                </div>
               </div>
-              {sinistre.assure?.telephone && <div className="flex items-center text-sm text-gray-600 border-t pt-3"><FaPhone className="mr-2 h-3 w-3 text-gray-400" />{sinistre.assure.telephone}</div>}
+              {sinistre.assure?.telephone && (
+                <div className="flex items-center text-sm text-gray-600 border-t pt-3">
+                  <FaPhone className="mr-2 h-3 w-3 text-gray-400" />{sinistre.assure.telephone}
+                </div>
+              )}
             </div>
 
             <div className="bg-white rounded-lg border p-6">
               <h2 className="text-lg font-semibold mb-3"><FaComments className="inline mr-2 text-blue-500" />Communication</h2>
               <div className="space-y-2 mb-3 max-h-64 overflow-y-auto">
-                {communications.length === 0 ? <p className="text-sm text-gray-500 text-center py-4">Aucune communication</p> : communications.slice(0, 10).map(comm => (
-                  <div key={comm.id} className={`p-2 rounded text-sm ${comm.type === 'notification' ? 'bg-blue-50' : 'bg-gray-50'}`}>
-                    <div className="flex justify-between mb-0.5"><span className="text-xs font-medium">{comm.expediteur_nom}</span><span className="text-xs text-gray-400">{formatDate(comm.created_at)}</span></div>
-                    <p className="text-xs whitespace-pre-wrap">{comm.contenu}</p>
-                  </div>
-                ))}
+                {communications.length === 0 ? (
+                  <p className="text-sm text-gray-500 text-center py-4">Aucune communication</p>
+                ) : (
+                  communications.slice(0, 10).map(comm => (
+                    <div key={comm.id} className={`p-2 rounded text-sm ${comm.type === 'notification' ? 'bg-blue-50' : 'bg-gray-50'}`}>
+                      <div className="flex justify-between mb-0.5">
+                        <span className="text-xs font-medium">{comm.expediteur_nom}</span>
+                        <span className="text-xs text-gray-400">{formatDate(comm.created_at)}</span>
+                      </div>
+                      <p className="text-xs whitespace-pre-wrap">{comm.contenu}</p>
+                    </div>
+                  ))
+                )}
               </div>
               <div className="flex space-x-2">
-                <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} placeholder="Message..." className="flex-1 text-sm border rounded-lg px-3 py-2" onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} />
-                <button onClick={handleSendMessage} disabled={!newMessage.trim()} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50"><FaPaperPlane className="h-4 w-4" /></button>
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Message..."
+                  className="flex-1 text-sm border rounded-lg px-3 py-2"
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!newMessage.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50"
+                >
+                  <FaPaperPlane className="h-4 w-4" />
+                </button>
               </div>
             </div>
 
             <div className="bg-white rounded-lg border p-6">
               <h2 className="text-lg font-semibold mb-4"><FaHistory className="inline mr-2 text-gray-400" />Historique</h2>
-              {historique.length === 0 ? <p className="text-sm text-gray-500 text-center py-4">Aucun historique</p> : (
+              {historique.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-4">Aucun historique</p>
+              ) : (
                 <div className="space-y-3 max-h-80 overflow-y-auto">
                   {historique.map(entry => (
                     <div key={entry.id} className="border-l-2 border-blue-200 pl-3">
                       <p className="text-xs text-gray-400">{formatDate(entry.created_at)}</p>
-                      <p className="text-sm"><span className="font-medium">{entry.commentaire || `${entry.ancien_statut} → ${entry.nouveau_statut}`}</span></p>
+                      <p className="text-sm">
+                        <span className="font-medium">
+                          {entry.commentaire || `${entry.ancien_statut} → ${entry.nouveau_statut}`}
+                        </span>
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -1830,13 +1747,25 @@ export default function SinistreDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Modals (DesignateExpert, Statut, Indemnisation) - gardés identiques */}
+      {/* Modals */}
       {showDesignateExpert && (
         <Modal onClose={() => setShowDesignateExpert(false)} title="Désigner un expert">
           <div className="space-y-4">
-            <div><label className="block text-sm font-medium mb-1">Expert *</label><select value={selectedExpert} onChange={(e) => setSelectedExpert(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm"><option value="">Sélectionner</option>{experts.map(e => <option key={e.id} value={e.id}>{e.nom}</option>)}</select></div>
-            <div><label className="block text-sm font-medium mb-1">Date expertise *</label><input type="datetime-local" value={dateExpertise} onChange={(e) => setDateExpertise(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" /></div>
-            <div className="flex space-x-3 pt-2"><button onClick={handleDesignateExpert} disabled={!selectedExpert || !dateExpertise} className="flex-1 bg-purple-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-purple-700 disabled:opacity-50">Désigner</button><button onClick={() => setShowDesignateExpert(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button></div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Expert *</label>
+              <select value={selectedExpert} onChange={(e) => setSelectedExpert(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm">
+                <option value="">Sélectionner</option>
+                {experts.map(e => <option key={e.id} value={e.id}>{e.nom}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Date expertise *</label>
+              <input type="datetime-local" value={dateExpertise} onChange={(e) => setDateExpertise(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div className="flex space-x-3 pt-2">
+              <button onClick={handleDesignateExpert} disabled={!selectedExpert || !dateExpertise} className="flex-1 bg-purple-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-purple-700 disabled:opacity-50">Désigner</button>
+              <button onClick={() => setShowDesignateExpert(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button>
+            </div>
           </div>
         </Modal>
       )}
@@ -1844,9 +1773,21 @@ export default function SinistreDetailPage({ params }: Props) {
       {showStatusModal && (
         <Modal onClose={() => setShowStatusModal(false)} title="Changer le statut">
           <div className="space-y-4">
-            <div><label className="block text-sm font-medium mb-1">Nouveau statut *</label><select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm"><option value="">Sélectionner</option>{Object.entries(STATUTS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</select></div>
-            <div><label className="block text-sm font-medium mb-1">Commentaire</label><textarea value={statusComment} onChange={(e) => setStatusComment(e.target.value)} rows={2} className="w-full border rounded-lg px-3 py-2 text-sm" /></div>
-            <div className="flex space-x-3 pt-2"><button onClick={handleChangeStatus} disabled={!newStatus} className="flex-1 bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">Confirmer</button><button onClick={() => setShowStatusModal(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button></div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Nouveau statut *</label>
+              <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm">
+                <option value="">Sélectionner</option>
+                {Object.entries(STATUTS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Commentaire</label>
+              <textarea value={statusComment} onChange={(e) => setStatusComment(e.target.value)} rows={2} className="w-full border rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div className="flex space-x-3 pt-2">
+              <button onClick={handleChangeStatus} disabled={!newStatus} className="flex-1 bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">Confirmer</button>
+              <button onClick={() => setShowStatusModal(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button>
+            </div>
           </div>
         </Modal>
       )}
@@ -1854,10 +1795,27 @@ export default function SinistreDetailPage({ params }: Props) {
       {showIndemnisationModal && (
         <Modal onClose={() => setShowIndemnisationModal(false)} title="Gérer l'indemnisation">
           <div className="space-y-4">
-            <div><label className="block text-sm font-medium mb-1">Montant (CDF) *</label><input type="number" value={indemnisationForm.montant_indemnisation} onChange={(e) => setIndemnisationForm({...indemnisationForm, montant_indemnisation: Number(e.target.value)})} className="w-full border rounded-lg px-3 py-2 text-sm" min="0" /></div>
-            <div><label className="block text-sm font-medium mb-1">Mode de paiement</label><select value={indemnisationForm.mode_paiement} onChange={(e) => setIndemnisationForm({...indemnisationForm, mode_paiement: e.target.value})} className="w-full border rounded-lg px-3 py-2 text-sm">{Object.entries(MODES_PAIEMENT).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></div>
-            <div><label className="block text-sm font-medium mb-1">Commentaire</label><textarea value={indemnisationForm.commentaire} onChange={(e) => setIndemnisationForm({...indemnisationForm, commentaire: e.target.value})} rows={3} className="w-full border rounded-lg px-3 py-2 text-sm" /></div>
-            <div className="flex space-x-3 pt-2"><button onClick={handleSaveIndemnisation} disabled={saving || !indemnisationForm.montant_indemnisation} className="flex-1 bg-green-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-green-700 disabled:opacity-50">{saving ? <FaSpinner className="animate-spin inline mr-1" /> : null}{indemnisation?.id ? 'Mettre à jour' : "Initier l'indemnisation"}</button><button onClick={() => setShowIndemnisationModal(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button></div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Montant (CDF) *</label>
+              <input type="number" value={indemnisationForm.montant_indemnisation} onChange={(e) => setIndemnisationForm({...indemnisationForm, montant_indemnisation: Number(e.target.value)})} className="w-full border rounded-lg px-3 py-2 text-sm" min="0" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Mode de paiement</label>
+              <select value={indemnisationForm.mode_paiement} onChange={(e) => setIndemnisationForm({...indemnisationForm, mode_paiement: e.target.value})} className="w-full border rounded-lg px-3 py-2 text-sm">
+                {Object.entries(MODES_PAIEMENT).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Commentaire</label>
+              <textarea value={indemnisationForm.commentaire} onChange={(e) => setIndemnisationForm({...indemnisationForm, commentaire: e.target.value})} rows={3} className="w-full border rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div className="flex space-x-3 pt-2">
+              <button onClick={handleSaveIndemnisation} disabled={saving || !indemnisationForm.montant_indemnisation} className="flex-1 bg-green-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-green-700 disabled:opacity-50">
+                {saving ? <FaSpinner className="animate-spin inline mr-1" /> : null}
+                {indemnisation?.id ? 'Mettre à jour' : "Initier l'indemnisation"}
+              </button>
+              <button onClick={() => setShowIndemnisationModal(false)} className="flex-1 border rounded-lg py-2.5 text-sm">Annuler</button>
+            </div>
           </div>
         </Modal>
       )}

@@ -563,7 +563,7 @@ const chargerStatsGlobales = async () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <Link href="/sinistres" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2">
+              <Link href="/agent/sinistres" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2">
                 <FaArrowLeft className="mr-2 h-4 w-4" />
                 Retour aux sinistres
               </Link>
