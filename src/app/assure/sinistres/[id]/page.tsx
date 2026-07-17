@@ -516,66 +516,9 @@ export default function AssureSinistreDetailPage({ params }: Props) {
                     <div><p className="text-gray-500">Véhicule</p><p className="font-medium">{sonasDeclaration.vehicule_marque_type || '-'} - {sonasDeclaration.vehicule_plaque || '-'}</p></div>
                   </div>
 
-                  {/* ===== PLAN DES LIEUX ===== */}
-                  {sonasDeclaration.plan_lieux_url && (
-                    <div className="border-2 border-green-300 rounded-lg overflow-hidden">
-                      <div className="bg-green-50 px-4 py-2 flex items-center gap-2 border-b border-green-300">
-                        <FaImage className="text-green-600 h-4 w-4" />
-                        <h4 className="font-semibold text-sm text-green-800">📐 Plan des lieux</h4>
-                      </div>
-                      <div className="p-4">
-                        <img 
-                          src={sonasDeclaration.plan_lieux_url} 
-                          alt="Plan des lieux" 
-                          className="w-full max-h-96 object-contain rounded-lg border border-gray-200"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/placeholder-image.png';
-                          }}
-                        />
-                        <div className="mt-2 flex justify-end">
-                          <a 
-                            href={sonasDeclaration.plan_lieux_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-                          >
-                            <FaDownload className="mr-1 h-3 w-3" /> Télécharger
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+             
 
-                  {/* ===== SIGNATURE ===== */}
-                  {sonasDeclaration.signature_assure_url && (
-                    <div className="border-2 border-purple-300 rounded-lg overflow-hidden">
-                      <div className="bg-purple-50 px-4 py-2 flex items-center gap-2 border-b border-purple-300">
-                        <FaPen className="text-purple-600 h-4 w-4" />
-                        <h4 className="font-semibold text-sm text-purple-800">✍️ Signature de l'assuré</h4>
-                      </div>
-                      <div className="p-4 flex flex-col items-center">
-                        <img 
-                          src={sonasDeclaration.signature_assure_url} 
-                          alt="Signature" 
-                          className="max-h-32 object-contain border border-gray-200 rounded-lg bg-white"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/placeholder-signature.png';
-                          }}
-                        />
-                        <div className="mt-2 flex justify-end w-full">
-                          <a 
-                            href={sonasDeclaration.signature_assure_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-                          >
-                            <FaDownload className="mr-1 h-3 w-3" /> Télécharger
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
+               
                   {/* Détails supplémentaires (affichés/masqués) */}
                   {showAllSonasDetails && (
                     <div className="space-y-4 pt-4 border-t">
@@ -600,18 +543,7 @@ export default function AssureSinistreDetailPage({ params }: Props) {
                         </div>
                       </CollapsibleSection>
 
-                      {/* Conducteur */}
-                      <CollapsibleSection title="3. Conducteur" icon={<FaIdCard className="h-4 w-4" />}>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                          <div><p className="text-gray-500">Nom et prénom</p><p className="font-medium">{sonasDeclaration.conducteur_nom_prenom || '-'}</p></div>
-                          <div><p className="text-gray-500">Âge</p><p className="font-medium">{sonasDeclaration.conducteur_age || '-'}</p></div>
-                          <div><p className="text-gray-500">À votre service ?</p><p className="font-medium">{sonasDeclaration.conducteur_a_service === true ? 'Oui' : sonasDeclaration.conducteur_a_service === false ? 'Non' : '-'}</p></div>
-                          <div className="col-span-2"><p className="text-gray-500">Titre de conduite</p><p className="font-medium">{sonasDeclaration.conducteur_titre_conduite || '-'}</p></div>
-                          <div><p className="text-gray-500">Permis n°</p><p className="font-medium">{sonasDeclaration.permis_no || '-'}</p></div>
-                          <div><p className="text-gray-500">Délivré à</p><p className="font-medium">{sonasDeclaration.permis_delivre_a || '-'}</p></div>
-                          <div><p className="text-gray-500">Date permis</p><p className="font-medium">{sonasDeclaration.permis_date ? formatDateShort(sonasDeclaration.permis_date) : '-'}</p></div>
-                        </div>
-                      </CollapsibleSection>
+                    
 
                       {/* Véhicule */}
                       <CollapsibleSection title="4. Véhicule" icon={<FaCar className="h-4 w-4" />}>
@@ -725,13 +657,7 @@ export default function AssureSinistreDetailPage({ params }: Props) {
                         </div>
                       </CollapsibleSection>
 
-                      {/* Signature - déjà affichée en haut, mais on garde les infos texte */}
-                      <CollapsibleSection title="Signature">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div><p className="text-gray-500">Fait à</p><p className="font-medium">{sonasDeclaration.fait_a || '-'}</p></div>
-                          <div><p className="text-gray-500">Date</p><p className="font-medium">{sonasDeclaration.date_signature ? formatDateShort(sonasDeclaration.date_signature) : '-'}</p></div>
-                        </div>
-                      </CollapsibleSection>
+                     
                     </div>
                   )}
                 </div>

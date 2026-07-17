@@ -1708,65 +1708,9 @@ export default function ExpertSinistreDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Plan des lieux */}
-            {sonasDeclaration.plan_lieux_url && (
-              <div className="border-2 border-green-300 rounded-lg overflow-hidden">
-                <div className="bg-green-50 px-4 py-2 flex items-center gap-2 border-b border-green-300">
-                  <FaImage className="text-green-600 h-4 w-4" />
-                  <h4 className="font-semibold text-sm text-green-800">📐 Plan des lieux</h4>
-                </div>
-                <div className="p-4">
-                  <img 
-                    src={sonasDeclaration.plan_lieux_url} 
-                    alt="Plan des lieux" 
-                    className="w-full max-h-96 object-contain rounded-lg border border-gray-200"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/placeholder-image.png';
-                    }}
-                  />
-                  <div className="mt-2 flex justify-end">
-                    <a 
-                      href={sonasDeclaration.plan_lieux_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      <FaDownload className="mr-1 h-3 w-3" /> Télécharger
-                    </a>
-                  </div>
-                </div>
-              </div>
-            )}
+         
 
-            {/* Signature */}
-            {sonasDeclaration.signature_assure_url && (
-              <div className="border-2 border-purple-300 rounded-lg overflow-hidden">
-                <div className="bg-purple-50 px-4 py-2 flex items-center gap-2 border-b border-purple-300">
-                  <FaPen className="text-purple-600 h-4 w-4" />
-                  <h4 className="font-semibold text-sm text-purple-800">✍️ Signature de l'assuré</h4>
-                </div>
-                <div className="p-4 flex flex-col items-center">
-                  <img 
-                    src={sonasDeclaration.signature_assure_url} 
-                    alt="Signature" 
-                    className="max-h-32 object-contain border border-gray-200 rounded-lg bg-white"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/placeholder-signature.png';
-                    }}
-                  />
-                  <div className="mt-2 flex justify-end w-full">
-                    <a 
-                      href={sonasDeclaration.signature_assure_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      <FaDownload className="mr-1 h-3 w-3" /> Télécharger
-                    </a>
-                  </div>
-                </div>
-              </div>
-            )}
+          
 
             {/* Détails complets - reste identique */}
             <div className="space-y-3">

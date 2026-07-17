@@ -30,7 +30,7 @@ const menuConfig = {
     { href: '/assure/dashboard', label: 'Dashboard', icon: FaHome, tooltip: 'Tableau de bord' },
     { href: '/assure/declaration', label: 'Faire une declaration', icon: FaFileContract, tooltip: 'Voir mes contrats' },
     { href: '/assure/sinistres', label: 'Mes Sinistres', icon: ClipboardList, tooltip: 'Voir mes sinistres' },
-    { href: '/assure/reclamations', label: 'Réclamations', icon: FaBell, tooltip: 'Faire une réclamation' },
+    // { href: '/assure/reclamations', label: 'Réclamations', icon: FaBell, tooltip: 'Faire une réclamation' },
   ],
 };
 

@@ -3160,25 +3160,7 @@ export default function DeclarationSinistrePage() {
                 </div>
               </div>
 
-              {/* 3. Conducteur */}
-              <div className="border rounded-lg overflow-hidden">
-                <div className="bg-gray-50 px-4 py-3 border-b flex items-center gap-2"><FaIdCard className="text-blue-600 h-4 w-4" /><h3 className="font-semibold text-sm">3. Conducteur</h3></div>
-                <div className="p-4 grid grid-cols-3 gap-4">
-                  <div><label className="block text-xs font-medium mb-1">Nom et prénom</label><input type="text" name="conducteur_nom_prenom" value={sonasForm.conducteur_nom_prenom} onChange={handleSonasChange} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                  <div><label className="block text-xs font-medium mb-1">Âge</label><input type="number" name="conducteur_age" value={sonasForm.conducteur_age} onChange={handleSonasChange} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                  <div>
-                    <label className="block text-xs font-medium mb-2">À votre service ?</label>
-                    <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer"><input type="radio" checked={sonasForm.conducteur_a_service === true} onChange={() => handleSonasRadio('conducteur_a_service', true)} className="w-4 h-4 text-blue-600" /><span className="text-sm">Oui</span></label>
-                      <label className="flex items-center gap-2 cursor-pointer"><input type="radio" checked={sonasForm.conducteur_a_service === false} onChange={() => handleSonasRadio('conducteur_a_service', false)} className="w-4 h-4 text-blue-600" /><span className="text-sm">Non</span></label>
-                    </div>
-                  </div>
-                  <div className="col-span-2"><label className="block text-xs font-medium mb-1">Titre de conduite</label><input type="text" name="conducteur_titre_conduite" value={sonasForm.conducteur_titre_conduite} onChange={handleSonasChange} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                  <div><label className="block text-xs font-medium mb-1">Permis n°</label><input type="text" name="permis_no" value={sonasForm.permis_no} onChange={handleSonasChange} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                  <div><label className="block text-xs font-medium mb-1">Délivré à</label><input type="text" name="permis_delivre_a" value={sonasForm.permis_delivre_a} onChange={handleSonasChange} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                  <div><label className="block text-xs font-medium mb-1">Date</label><input type="date" name="permis_date" value={sonasForm.permis_date} onChange={handleSonasChange} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                </div>
-              </div>
+            
 
               {/* 4. Véhicule */}
               <div className="border rounded-lg overflow-hidden border-green-300">
@@ -3207,31 +3189,7 @@ export default function DeclarationSinistrePage() {
                 </div>
               </div>
 
-              {/* 5. Description accident avec UPLOAD PLAN LIEUX */}
-              <div className="border rounded-lg overflow-hidden">
-                <div className="bg-gray-50 px-4 py-3 border-b flex items-center gap-2"><FaClipboardList className="text-blue-600 h-4 w-4" /><h3 className="font-semibold text-sm">5. Description de l'accident</h3></div>
-                <div className="p-4 space-y-4">
-                  <div><label className="block text-xs font-medium mb-1">Description</label><textarea name="description_accident" value={sonasForm.description_accident} onChange={handleSonasChange} rows={4} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                  <div>
-                    <label className="block text-xs font-medium mb-2">Plan des lieux (image)</label>
-                    {planLieuxPreview ? (
-                      <div className="relative">
-                        <img src={planLieuxPreview} alt="Plan des lieux" className="w-full h-64 object-contain border rounded-lg" />
-                        <button type="button" onClick={removePlanLieux} className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600">
-                          <FaTrash className="h-3 w-3" />
-                        </button>
-                      </div>
-                    ) : (
-                      <label className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                        <FaImage className="h-8 w-8 text-gray-400 mb-2" />
-                        <span className="text-sm text-gray-500 mb-1">Cliquez pour uploader le plan des lieux</span>
-                        <span className="text-xs text-gray-400">JPG, PNG (max 5MB)</span>
-                        <input type="file" accept="image/*" onChange={handlePlanLieuxUpload} className="sr-only" />
-                      </label>
-                    )}
-                  </div>
-                </div>
-              </div>
+          
 
               {/* 6. Dégâts véhicule */}
               <div className="border rounded-lg overflow-hidden">
@@ -3340,32 +3298,7 @@ export default function DeclarationSinistrePage() {
                 </div>
               </div>
 
-              {/* Signature avec UPLOAD */}
-              <div className="border rounded-lg overflow-hidden">
-                <div className="bg-gray-50 px-4 py-3 border-b flex items-center gap-2"><FaFileSignature className="text-blue-600 h-4 w-4" /><h3 className="font-semibold text-sm">Signature</h3></div>
-                <div className="p-4 grid grid-cols-2 gap-4">
-                  <div><label className="block text-xs font-medium mb-1">Fait à</label><input type="text" name="fait_a" value={sonasForm.fait_a} onChange={handleSonasChange} placeholder="Lieu" className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                  <div><label className="block text-xs font-medium mb-1">Le</label><input type="date" name="date_signature" value={sonasForm.date_signature} onChange={handleSonasChange} className="w-full px-3 py-2 border rounded-md text-sm" /></div>
-                </div>
-                <div className="px-4 pb-4">
-                  <label className="block text-xs font-medium mb-2">Signature</label>
-                  {signaturePreview ? (
-                    <div className="relative">
-                      <img src={signaturePreview} alt="Signature" className="w-full h-32 object-contain border rounded-lg bg-white" />
-                      <button type="button" onClick={removeSignature} className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600">
-                        <FaTrash className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                      <FaPen className="h-8 w-8 text-gray-400 mb-2" />
-                      <span className="text-sm text-gray-500 mb-1">Cliquez pour uploader votre signature</span>
-                      <span className="text-xs text-gray-400">JPG, PNG (max 2MB)</span>
-                      <input type="file" accept="image/*" onChange={handleSignatureUpload} className="sr-only" />
-                    </label>
-                  )}
-                </div>
-              </div>
+             
             </div>
           </div>
         )}
